@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
         <meta charset="utf-8" />
-        <title>Today I Learnt - Data Engineering Diaries</title>
+        <title>MultiIndex.set_levels() in pandas</title>
         <link rel="stylesheet" href="https://datadiaries.commons.host/theme/css/main.css" />
 </head>
 
@@ -10,13 +10,18 @@
         <header id="banner" class="body">
                 <h1><a href="https://datadiaries.commons.host/">Today I Learnt - Data Engineering Diaries </a></h1>
                 <nav><ul>
-                    <li><a href="https://datadiaries.commons.host/category/pandas.html">Pandas</a></li>
+                    <li class="active"><a href="https://datadiaries.commons.host/category/pandas.html">Pandas</a></li>
                 </ul></nav>
         </header><!-- /#banner -->
+<section id="content" class="body">
+  <article>
+    <header>
+      <h1 class="entry-title">
+        <a href="https://datadiaries.commons.host/multiindexset_levels-in-pandas.html" rel="bookmark"
+           title="Permalink to MultiIndex.set_levels() in pandas">MultiIndex.set_levels() in pandas</a></h1>
+    </header>
 
-            <aside id="featured" class="body">
-                <article>
-                    <h1 class="entry-title"><a href="https://datadiaries.commons.host/multiindexset_levels-in-pandas.html">MultiIndex.set_levels() in pandas</a></h1>
+    <div class="entry-content">
 <footer class="post-info">
         <abbr class="published" title="2020-01-04T10:20:00+08:00">
                 Published: Sat 04 January 2020
@@ -27,7 +32,7 @@
         </address>
 <p>In <a href="https://datadiaries.commons.host/category/pandas.html">Pandas</a>.</p>
 
-</footer><!-- /.post-info --><p>Problem:
+</footer><!-- /.post-info -->      <p>Problem:
 A user filed an issue on the pandas repo regarding MultiIndex.set_levels - and it turns out the user had some confusion between the set_levels method and the set_names method for MultiIndex due to the documentation. Hence, the MultiIndex.set_levels documentation was marked by the maintainers for improvements to clarify that MultiIndex.set_levels() interprets passed values as new components of the .levels attribute.</p>
 <p>What I did:
 As suggested by @jreback, I updated the docstring of MultiIndex.set_levels directly so that it would be reflected in the API reference. I made the following changes to the docstring:</p>
@@ -55,8 +60,11 @@ is to illustrate that set_levels() passes values into the levels attribute that 
 </ul>
 </li>
 </ol>
-<p>Updated docs: <a href="https://dev.pandas.io/docs/reference/api/pandas.MultiIndex.set_levels.html">https://dev.pandas.io/docs/reference/api/pandas.MultiIndex.set_levels.html</a></p>                </article>
-            </aside><!-- /#featured -->
+<p>Updated docs: <a href="https://dev.pandas.io/docs/reference/api/pandas.MultiIndex.set_levels.html">https://dev.pandas.io/docs/reference/api/pandas.MultiIndex.set_levels.html</a></p>
+    </div><!-- /.entry-content -->
+
+  </article>
+</section>
         <section id="extras" class="body">
                 <div class="blogroll">
                         <h2>links</h2>

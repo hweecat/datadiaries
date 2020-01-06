@@ -4,7 +4,7 @@ from __future__ import unicode_literals
 
 AUTHOR = 'Ong Chin Hwee'
 SITENAME = 'Today I Learnt - Data Engineering Diaries'
-SITEURL = ''
+SITEURL = 'https://datadiaries.commons.host'
 
 PATH = 'content'
 
@@ -20,14 +20,14 @@ AUTHOR_FEED_ATOM = None
 AUTHOR_FEED_RSS = None
 
 # Blogroll
-LINKS = (('Pelican', 'http://getpelican.com/'),
-         ('Python.org', 'http://python.org/'),
-         ('Jinja2', 'http://jinja.pocoo.org/'),
-         ('You can modify those links in your config file', '#'),)
+LINKS = (('My Portfolio', 'https://ongchinhwee.me/'),
+         ('pandas', 'https://github.com/pandas-dev/pandas/'),
+         ('Talks', 'https://ongchinhwee.me/about#talks'),)
 
 # Social widget
-SOCIAL = (('You can add links in your config file', '#'),
-          ('Another social link', '#'),)
+SOCIAL = (('GitHub', 'https://github.com/hweecat'),
+          ('Linkedin', 'https://linkedin.com/in/ongchinhwee'),
+          ('Twitter', 'https://twitter.com/ongchinhwee'),)
 
 DEFAULT_PAGINATION = 10
 

@@ -3,48 +3,76 @@
 <head>
         <meta charset="utf-8" />
         <title>Today I Learnt - Data Engineering Diaries - Ong Chin Hwee</title>
-        <link rel="stylesheet" href="/theme/css/main.css" />
+        <link rel="stylesheet" href="https://datadiaries.commons.host/theme/css/main.css" />
 </head>
 
 <body id="index" class="home">
         <header id="banner" class="body">
-                <h1><a href="/">Today I Learnt - Data Engineering Diaries </a></h1>
+                <h1><a href="https://datadiaries.commons.host/">Today I Learnt - Data Engineering Diaries </a></h1>
                 <nav><ul>
-                    <li><a href="/category/review.html">Review</a></li>
+                    <li><a href="https://datadiaries.commons.host/category/pandas.html">Pandas</a></li>
                 </ul></nav>
         </header><!-- /#banner -->
 
             <aside id="featured" class="body">
                 <article>
-                    <h1 class="entry-title"><a href="/my-first-review.html">My First Review</a></h1>
+                    <h1 class="entry-title"><a href="https://datadiaries.commons.host/multiindexset_levels-in-pandas.html">MultiIndex.set_levels() in pandas</a></h1>
 <footer class="post-info">
-        <abbr class="published" title="2020-01-03T10:20:00+08:00">
-                Published: Fri 03 January 2020
+        <abbr class="published" title="2020-01-04T10:20:00+08:00">
+                Published: Sat 04 January 2020
         </abbr>
 
         <address class="vcard author">
-                By                         <a class="url fn" href="/author/ong-chin-hwee.html">Ong Chin Hwee</a>
+                By                         <a class="url fn" href="https://datadiaries.commons.host/author/ong-chin-hwee.html">Ong Chin Hwee</a>
         </address>
-<p>In <a href="/category/review.html">Review</a>.</p>
+<p>In <a href="https://datadiaries.commons.host/category/pandas.html">Pandas</a>.</p>
 
-</footer><!-- /.post-info --><p>Following is a review of my favorite mechanical keyboard.</p>                </article>
+</footer><!-- /.post-info --><p>Problem:
+A user filed an issue on the pandas repo regarding MultiIndex.set_levels - and it turns out the user had some confusion between the set_levels method and the set_names method for MultiIndex due to the documentation. Hence, the MultiIndex.set_levels documentation was marked by the maintainers for improvements to clarify that MultiIndex.set_levels() interprets passed values as new components of the .levels attribute.</p>
+<p>What I did:
+As suggested by @jreback, I updated the docstring of MultiIndex.set_levels directly so that it would be reflected in the API reference. I made the following changes to the docstring:</p>
+<ol>
+<li>Added an extra value to make the example clearer.<ul>
+<li>From my discussion with Marc Garcia (@datapythonista), my intention of adding an extra value at one of the levels (same for the MultiIndex above) is to further highlight the differences in passing values to the two levels in the MultiIndex, for which the number of values in each level are not equal. Using different number of values in each level is to emphasize that set_levels() passes values to indexes on 'by level' basis (by changing the levels attribute), not on 'by row / integer code' basis.</li>
+</ul>
+</li>
+<li>Added an additional example to clarify that MultiIndex.set_levels() interprets passed values as new components of the .levels attribute.<ul>
+<li>The intention of the following example
+    &gt;&gt; idx.set_levels([['a', 'b', 'c'], [1, 2, 3, 4]], level=[0, 1])
+    MultiIndex([('a', 1),
+                ('a', 2),
+                ('b', 1),
+                ('b', 2)],
+            names=['foo', 'bar'])
+    &gt;&gt; idx.set_levels([['a', 'b', 'c'], [1, 2, 3, 4]], level=[0, 1]).levels
+    FrozenList([['a', 'b', 'c'], [1, 2, 3, 4]])
+is to illustrate that set_levels() passes values into the levels attribute that is represented by a FrozenList containing list of values for each level in the MultiIndex, even when the number of values passed for a level is more than the number of indexes available in the MultiIndex itself.</li>
+</ul>
+</li>
+<li>Added the clarification that MultiIndex.set_levels() interprets passed values as new components of the .levels attribute and stores the passed values even if any of the levels passed to set_levels() exceeds the existing length.<ul>
+<li>The following clarification was finalized in the docs after feedback from Will Ayd (@WillAyd) and G. Young (@gfyoung):
+    "If any of the levels passed to set_levels() exceeds the existing length, all of the values from that argument will be stored in the MultiIndex levels, though the values will be truncated in the MultiIndex output."</li>
+</ul>
+</li>
+</ol>
+<p>Updated docs: <a href="https://dev.pandas.io/docs/reference/api/pandas.MultiIndex.set_levels.html">https://dev.pandas.io/docs/reference/api/pandas.MultiIndex.set_levels.html</a></p>                </article>
             </aside><!-- /#featured -->
         <section id="extras" class="body">
                 <div class="blogroll">
                         <h2>links</h2>
                         <ul>
-                            <li><a href="http://getpelican.com/">Pelican</a></li>
-                            <li><a href="http://python.org/">Python.org</a></li>
-                            <li><a href="http://jinja.pocoo.org/">Jinja2</a></li>
-                            <li><a href="#">You can modify those links in your config file</a></li>
+                            <li><a href="https://ongchinhwee.me/">My Portfolio</a></li>
+                            <li><a href="https://github.com/pandas-dev/pandas/">pandas</a></li>
+                            <li><a href="https://ongchinhwee.me/about#talks">Talks</a></li>
                         </ul>
                 </div><!-- /.blogroll -->
                 <div class="social">
                         <h2>social</h2>
                         <ul>
 
-                            <li><a href="#">You can add links in your config file</a></li>
-                            <li><a href="#">Another social link</a></li>
+                            <li><a href="https://github.com/hweecat">GitHub</a></li>
+                            <li><a href="https://linkedin.com/in/ongchinhwee">Linkedin</a></li>
+                            <li><a href="https://twitter.com/ongchinhwee">Twitter</a></li>
                         </ul>
                 </div><!-- /.social -->
         </section><!-- /#extras -->
