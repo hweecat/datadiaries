@@ -32,24 +32,36 @@ A user filed an issue on the pandas repo regarding MultiIndex.set_levels - and i
 <p>What I did:
 As suggested by @jreback, I updated the docstring of MultiIndex.set_levels directly so that it would be reflected in the API reference. I made the following changes to the docstring:</p>
 <ol>
-<li>Added an extra value to make the example clearer.<ul>
+<li>
+<p>Added an extra value to make the example clearer.</p>
+<ul>
 <li>From my discussion with Marc Garcia (@datapythonista), my intention of adding an extra value at one of the levels (same for the MultiIndex above) is to further highlight the differences in passing values to the two levels in the MultiIndex, for which the number of values in each level are not equal. Using different number of values in each level is to emphasize that set_levels() passes values to indexes on 'by level' basis (by changing the levels attribute), not on 'by row / integer code' basis.</li>
 </ul>
 </li>
-<li>Added an additional example to clarify that MultiIndex.set_levels() interprets passed values as new components of the .levels attribute.<ul>
-<li>The intention of the following example
-    &gt;&gt; idx.set_levels([['a', 'b', 'c'], [1, 2, 3, 4]], level=[0, 1])
-    MultiIndex([('a', 1),
-                ('a', 2),
-                ('b', 1),
-                ('b', 2)],
-            names=['foo', 'bar'])
-    &gt;&gt; idx.set_levels([['a', 'b', 'c'], [1, 2, 3, 4]], level=[0, 1]).levels
-    FrozenList([['a', 'b', 'c'], [1, 2, 3, 4]])
-is to illustrate that set_levels() passes values into the levels attribute that is represented by a FrozenList containing list of values for each level in the MultiIndex, even when the number of values passed for a level is more than the number of indexes available in the MultiIndex itself.</li>
+<li>
+<p>Added an additional example to clarify that MultiIndex.set_levels() interprets passed values as new components of the .levels attribute.</p>
+<ul>
+<li>The intention of the following example is to illustrate that set_levels() passes values into the levels attribute that is represented by a FrozenList containing list of values for each level in the MultiIndex, even when the number of values passed for a level is more than the number of indexes available in the MultiIndex itself.</li>
 </ul>
+<p>:::python</p>
+<div class="highlight"><pre><span></span><span class="o">&gt;&gt;</span> <span class="n">idx</span><span class="p">.</span><span class="n">set_levels</span><span class="p">([[</span><span class="s1">&#39;a&#39;</span><span class="p">,</span> <span class="s1">&#39;b&#39;</span><span class="p">,</span> <span class="s1">&#39;c&#39;</span><span class="p">],</span> <span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="mi">4</span><span class="p">]],</span> <span class="k">level</span><span class="o">=</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">])</span>
+
+<span class="n">MultiIndex</span><span class="p">([(</span><span class="s1">&#39;a&#39;</span><span class="p">,</span> <span class="mi">1</span><span class="p">),</span>
+            <span class="p">(</span><span class="s1">&#39;a&#39;</span><span class="p">,</span> <span class="mi">2</span><span class="p">),</span>
+            <span class="p">(</span><span class="s1">&#39;b&#39;</span><span class="p">,</span> <span class="mi">1</span><span class="p">),</span>
+            <span class="p">(</span><span class="s1">&#39;b&#39;</span><span class="p">,</span> <span class="mi">2</span><span class="p">)],</span>
+        <span class="k">names</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;foo&#39;</span><span class="p">,</span> <span class="s1">&#39;bar&#39;</span><span class="p">])</span>
+
+<span class="o">&gt;&gt;</span> <span class="n">idx</span><span class="p">.</span><span class="n">set_levels</span><span class="p">([[</span><span class="s1">&#39;a&#39;</span><span class="p">,</span> <span class="s1">&#39;b&#39;</span><span class="p">,</span> <span class="s1">&#39;c&#39;</span><span class="p">],</span> <span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="mi">4</span><span class="p">]],</span> <span class="k">level</span><span class="o">=</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">]).</span><span class="n">levels</span>
+
+<span class="n">FrozenList</span><span class="p">([[</span><span class="s1">&#39;a&#39;</span><span class="p">,</span> <span class="s1">&#39;b&#39;</span><span class="p">,</span> <span class="s1">&#39;c&#39;</span><span class="p">],</span> <span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="mi">4</span><span class="p">]])</span>
+</pre></div>
+
+
 </li>
-<li>Added the clarification that MultiIndex.set_levels() interprets passed values as new components of the .levels attribute and stores the passed values even if any of the levels passed to set_levels() exceeds the existing length.<ul>
+<li>
+<p>Added the clarification that MultiIndex.set_levels() interprets passed values as new components of the .levels attribute and stores the passed values even if any of the levels passed to set_levels() exceeds the existing length.</p>
+<ul>
 <li>The following clarification was finalized in the docs after feedback from Will Ayd (@WillAyd) and G. Young (@gfyoung):
     "If any of the levels passed to set_levels() exceeds the existing length, all of the values from that argument will be stored in the MultiIndex levels, though the values will be truncated in the MultiIndex output."</li>
 </ul>
