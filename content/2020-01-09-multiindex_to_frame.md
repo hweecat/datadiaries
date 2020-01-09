@@ -1,5 +1,5 @@
 Title: MultiIndex.to_frame()
-Date: 2020-01-03 10:20
+Date: 2020-01-09 18:06
 Category: Pandas
 Status: published
 
