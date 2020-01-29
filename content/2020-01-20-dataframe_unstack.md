@@ -21,13 +21,10 @@ What I did:
 
 
 
-    agg_df = \
+    >> agg_df = \
         df.groupby(
             [column_level0_agg, column_level1_agg]).agg(**{
-                'min value': pd.NamedAgg(column='PO Value in SGD', aggfunc='min'),
-                'max value': pd.NamedAgg(column='PO Value in SGD', aggfunc='max'),
-                'mean value': pd.NamedAgg(column='PO Value in SGD', aggfunc=np.mean),
-                'PO Count': pd.NamedAgg(column='Purch.doc.', aggfunc='nunique'),
+                'Transaction Count': pd.NamedAgg(column='Transaction No.', aggfunc='nunique'),
                 'Total PV ($)': pd.NamedAgg(column='PO Value in SGD', aggfunc=np.sum)
             })
 
