@@ -1,4 +1,4 @@
-Title: Dataframe manipulation sequence - GroupBy Agg, 
+Title: Dataframe manipulation sequence - GroupBy Agg, Melt, Unstack
 Date: 2020-01-09 18:06
 Category: Pandas
 Status: draft

@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+        <meta charset="utf-8" />
+        <title>Dataframe manipulation sequence - GroupBy Agg, Melt, Unstack</title>
+        <link rel="stylesheet" href="https://datadiaries.commons.host/theme/css/main.css" />
+</head>
+
+<body id="index" class="home">
+        <header id="banner" class="body">
+                <h1><a href="https://datadiaries.commons.host/">Today I Learnt - Data Engineering Diaries </a></h1>
+                <nav><ul>
+                    <li class="active"><a href="https://datadiaries.commons.host/category/pandas.html">Pandas</a></li>
+                </ul></nav>
+        </header><!-- /#banner -->
+<section id="content" class="body">
+  <article>
+    <header>
+      <h1 class="entry-title">
+        <a href="https://datadiaries.commons.host/drafts/dataframe-manipulation-sequence-groupby-agg-melt-unstack.html" rel="bookmark"
+           title="Permalink to Dataframe manipulation sequence - GroupBy Agg, Melt, Unstack">Dataframe manipulation sequence - GroupBy Agg, Melt, Unstack</a></h1>
+    </header>
+
+    <div class="entry-content">
+<footer class="post-info">
+        <abbr class="published" title="2020-01-09T18:06:00+08:00">
+                Published: Thu 09 January 2020
+        </abbr>
+
+        <address class="vcard author">
+                By                         <a class="url fn" href="https://datadiaries.commons.host/author/ong-chin-hwee.html">Ong Chin Hwee</a>
+        </address>
+<p>In <a href="https://datadiaries.commons.host/category/pandas.html">Pandas</a>.</p>
+
+</footer><!-- /.post-info -->      <p>Problem: From a MultiIndex dataframe, determine the total number of elements in the Buyer column for each Vendor.</p>
+<p>What I did:</p>
+<p>:::python</p>
+<div class="highlight"><pre><span></span><span class="o">&gt;&gt;</span> <span class="n">df</span> <span class="o">=</span> <span class="n">pd</span><span class="p">.</span><span class="n">DataFrame</span><span class="p">(</span><span class="k">data</span><span class="o">=</span>
+    <span class="err">{</span><span class="s1">&#39;Vendor&#39;</span><span class="p">:</span> <span class="p">[</span><span class="s1">&#39;A&#39;</span><span class="p">,</span> <span class="s1">&#39;A&#39;</span><span class="p">,</span> <span class="s1">&#39;B&#39;</span><span class="p">,</span> <span class="s1">&#39;C&#39;</span><span class="p">,</span> <span class="s1">&#39;C&#39;</span><span class="p">,</span> <span class="s1">&#39;C&#39;</span><span class="p">,</span>
+            <span class="s1">&#39;D&#39;</span><span class="p">,</span> <span class="s1">&#39;D&#39;</span><span class="p">,</span> <span class="s1">&#39;E&#39;</span><span class="p">,</span> <span class="s1">&#39;E&#39;</span><span class="p">,</span> <span class="s1">&#39;F&#39;</span><span class="p">,</span> <span class="s1">&#39;G&#39;</span><span class="p">,</span> <span class="s1">&#39;G&#39;</span><span class="p">],</span>      
+    <span class="s1">&#39;Buyer&#39;</span><span class="p">:[</span><span class="s1">&#39;BU1&#39;</span><span class="p">,</span> <span class="s1">&#39;BU3&#39;</span><span class="p">,</span> <span class="s1">&#39;BU2&#39;</span><span class="p">,</span> <span class="s1">&#39;BU1&#39;</span><span class="p">,</span> <span class="s1">&#39;BU3&#39;</span><span class="p">,</span> <span class="s1">&#39;BU4&#39;</span><span class="p">,</span>
+            <span class="s1">&#39;BU1&#39;</span><span class="p">,</span> <span class="s1">&#39;BU2&#39;</span><span class="p">,</span> <span class="s1">&#39;BU1&#39;</span><span class="p">,</span> <span class="s1">&#39;BU4&#39;</span><span class="p">,</span> <span class="s1">&#39;BU2&#39;</span><span class="p">,</span> <span class="s1">&#39;BU1&#39;</span><span class="p">,</span> <span class="s1">&#39;BU3&#39;</span><span class="p">],</span>
+    <span class="s1">&#39;Amount&#39;</span><span class="p">:[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">5</span><span class="p">,</span> <span class="mi">20</span><span class="p">,</span> <span class="mi">103</span><span class="p">,</span> <span class="mi">234</span><span class="p">,</span> <span class="mi">13</span><span class="p">,</span> <span class="mi">15</span><span class="p">,</span>
+        <span class="mi">23</span><span class="p">,</span> <span class="mi">156</span><span class="p">,</span> <span class="mi">60</span><span class="p">,</span> <span class="mi">97</span><span class="p">,</span> <span class="mi">23</span><span class="p">,</span> <span class="mi">14</span><span class="p">]</span><span class="err">}</span>
+<span class="p">)</span>
+
+
+
+<span class="o">&gt;&gt;</span> <span class="n">agg_df</span> <span class="o">=</span> <span class="err">\</span>
+    <span class="n">df</span><span class="p">.</span><span class="n">groupby</span><span class="p">(</span>
+        <span class="p">[</span><span class="n">column_level0_agg</span><span class="p">,</span> <span class="n">column_level1_agg</span><span class="p">]).</span><span class="n">agg</span><span class="p">(</span><span class="o">**</span><span class="err">{</span>
+            <span class="s1">&#39;Transaction Count&#39;</span><span class="p">:</span> <span class="n">pd</span><span class="p">.</span><span class="n">NamedAgg</span><span class="p">(</span><span class="k">column</span><span class="o">=</span><span class="s1">&#39;Transaction No.&#39;</span><span class="p">,</span> <span class="n">aggfunc</span><span class="o">=</span><span class="s1">&#39;nunique&#39;</span><span class="p">),</span>
+            <span class="s1">&#39;Total PV ($)&#39;</span><span class="p">:</span> <span class="n">pd</span><span class="p">.</span><span class="n">NamedAgg</span><span class="p">(</span><span class="k">column</span><span class="o">=</span><span class="s1">&#39;PO Value in SGD&#39;</span><span class="p">,</span> <span class="n">aggfunc</span><span class="o">=</span><span class="n">np</span><span class="p">.</span><span class="k">sum</span><span class="p">)</span>
+        <span class="err">}</span><span class="p">)</span>
+
+<span class="n">agg_df</span><span class="p">.</span><span class="n">reset_index</span><span class="p">(</span>
+            <span class="n">inplace</span><span class="o">=</span><span class="k">True</span><span class="p">).</span><span class="n">sort_values</span><span class="p">(</span>
+                <span class="n">column_level1_agg</span><span class="p">,</span> <span class="n">column_level0_agg</span><span class="p">],</span> <span class="n">inplace</span><span class="o">=</span><span class="k">True</span><span class="p">)</span>
+
+<span class="n">df_melt</span> <span class="o">=</span> <span class="n">agg_df</span><span class="p">.</span><span class="n">melt</span><span class="p">(</span>
+        <span class="n">id_vars</span><span class="o">=</span><span class="p">[</span><span class="n">column_level0_agg</span><span class="p">,</span> <span class="n">column_level1_agg</span><span class="p">],</span>
+        <span class="n">value_vars</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;PO Count&#39;</span><span class="p">,</span> <span class="s1">&#39;Total PV ($)&#39;</span><span class="p">]</span>
+        <span class="p">)</span>
+
+<span class="n">df_melt</span>
+
+<span class="n">df_multiindex</span> <span class="o">=</span> <span class="n">df_melt</span><span class="p">.</span><span class="n">set_index</span><span class="p">(</span>
+                    <span class="p">[</span><span class="n">column_level0_agg</span><span class="p">,</span> <span class="n">column_level1_agg</span><span class="p">,</span> <span class="s1">&#39;variable&#39;</span><span class="p">]</span>
+                    <span class="p">)</span>
+
+<span class="n">df_multiindex</span>
+
+<span class="n">df_unstack</span> <span class="o">=</span> <span class="n">df_multiindex</span><span class="p">.</span><span class="n">unstack</span><span class="p">(</span><span class="k">level</span><span class="o">=-</span><span class="mi">2</span><span class="p">)</span>
+
+<span class="n">df_unstack</span><span class="p">[</span><span class="s1">&#39;Total&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">df_unstack</span><span class="p">.</span><span class="k">sum</span><span class="p">(</span><span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+
+<span class="n">df_unstack</span>
+</pre></div>
+    </div><!-- /.entry-content -->
+
+  </article>
+</section>
+        <section id="extras" class="body">
+                <div class="blogroll">
+                        <h2>links</h2>
+                        <ul>
+                            <li><a href="https://ongchinhwee.me/">My Portfolio</a></li>
+                            <li><a href="https://github.com/pandas-dev/pandas/">pandas</a></li>
+                            <li><a href="https://ongchinhwee.me/about#talks">Talks</a></li>
+                        </ul>
+                </div><!-- /.blogroll -->
+                <div class="social">
+                        <h2>social</h2>
+                        <ul>
+
+                            <li><a href="https://github.com/hweecat">GitHub</a></li>
+                            <li><a href="https://linkedin.com/in/ongchinhwee">Linkedin</a></li>
+                            <li><a href="https://twitter.com/ongchinhwee">Twitter</a></li>
+                        </ul>
+                </div><!-- /.social -->
+        </section><!-- /#extras -->
+
+        <footer id="contentinfo" class="body">
+                <address id="about" class="vcard body">
+                Proudly powered by <a href="http://getpelican.com/">Pelican</a>, which takes great advantage of <a href="http://python.org">Python</a>.
+                </address><!-- /#about -->
+
+                <p>The theme is by <a href="http://coding.smashingmagazine.com/2009/08/04/designing-a-html-5-layout-from-scratch/">Smashing Magazine</a>, thanks!</p>
+        </footer><!-- /#contentinfo -->
+
+</body>
+</html>
