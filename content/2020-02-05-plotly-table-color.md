@@ -13,9 +13,9 @@ Generate a data table in Plotly that has the following features:
 
 ## What I did
 
-### Step 1: Generate data table in Plotly
+### Step 1: Generate data table for Plotly
 
-Due to limitations in displaying MultiIndex DataFrames in Plotly, the original MultiIndex DataFrame has to be manipulated in a way that allows Plotly to read the cell values in the DataFrame
+Due to limitations in displaying MultiIndex DataFrames in Table format with Plotly, the original MultiIndex DataFrame has to be manipulated in a way that allows Plotly to read the cell values in the DataFrame
 
 ### Step 1: Create backend table for metric used in the conditions
 
