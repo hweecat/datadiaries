@@ -27,95 +27,95 @@
         </address>
 <p>In <a href="https://datadiaries.commons.host/category/pandas.html">Pandas</a>.</p>
 
-</footer><!-- /.post-info --><h2>Problem:</h2>
+</footer><!-- /.post-info --><h2>Problem</h2>
 <p>From a MultiIndex dataframe, determine the total number of elements in the Buyer column for each Vendor.</p>
-<h2>What I did:</h2>
+<h2>What I did</h2>
 <p>Let's say we have the following DataFrame:</p>
 <p>:::python</p>
-<div class="highlight"><pre><span></span><span class="o">&gt;&gt;</span> <span class="n">df</span> <span class="o">=</span> <span class="n">pd</span><span class="p">.</span><span class="n">DataFrame</span><span class="p">(</span><span class="k">data</span><span class="o">=</span>
-    <span class="err">{</span><span class="s1">&#39;Vendor&#39;</span><span class="p">:</span> <span class="p">[</span><span class="s1">&#39;A&#39;</span><span class="p">,</span> <span class="s1">&#39;A&#39;</span><span class="p">,</span> <span class="s1">&#39;B&#39;</span><span class="p">,</span> <span class="s1">&#39;C&#39;</span><span class="p">,</span> <span class="s1">&#39;C&#39;</span><span class="p">,</span> <span class="s1">&#39;C&#39;</span><span class="p">,</span>
-            <span class="s1">&#39;D&#39;</span><span class="p">,</span> <span class="s1">&#39;D&#39;</span><span class="p">,</span> <span class="s1">&#39;E&#39;</span><span class="p">,</span> <span class="s1">&#39;E&#39;</span><span class="p">,</span> <span class="s1">&#39;F&#39;</span><span class="p">,</span> <span class="s1">&#39;G&#39;</span><span class="p">,</span> <span class="s1">&#39;G&#39;</span><span class="p">],</span>      
-    <span class="s1">&#39;Buyer&#39;</span><span class="p">:[</span><span class="s1">&#39;BU1&#39;</span><span class="p">,</span> <span class="s1">&#39;BU3&#39;</span><span class="p">,</span> <span class="s1">&#39;BU2&#39;</span><span class="p">,</span> <span class="s1">&#39;BU1&#39;</span><span class="p">,</span> <span class="s1">&#39;BU3&#39;</span><span class="p">,</span> <span class="s1">&#39;BU4&#39;</span><span class="p">,</span>
-            <span class="s1">&#39;BU1&#39;</span><span class="p">,</span> <span class="s1">&#39;BU2&#39;</span><span class="p">,</span> <span class="s1">&#39;BU1&#39;</span><span class="p">,</span> <span class="s1">&#39;BU4&#39;</span><span class="p">,</span> <span class="s1">&#39;BU2&#39;</span><span class="p">,</span> <span class="s1">&#39;BU1&#39;</span><span class="p">,</span> <span class="s1">&#39;BU3&#39;</span><span class="p">],</span>
-    <span class="s1">&#39;Amount&#39;</span><span class="p">:[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">5</span><span class="p">,</span> <span class="mi">20</span><span class="p">,</span> <span class="mi">103</span><span class="p">,</span> <span class="mi">234</span><span class="p">,</span> <span class="mi">13</span><span class="p">,</span> <span class="mi">15</span><span class="p">,</span>
-        <span class="mi">23</span><span class="p">,</span> <span class="mi">156</span><span class="p">,</span> <span class="mi">60</span><span class="p">,</span> <span class="mi">97</span><span class="p">,</span> <span class="mi">23</span><span class="p">,</span> <span class="mi">14</span><span class="p">]</span><span class="err">}</span>
+<div class="highlight"><pre><span></span><span class="s s-Atom">&gt;&gt;</span> <span class="s s-Atom">df</span> <span class="o">=</span> <span class="s s-Atom">pd</span><span class="p">.</span><span class="nv">DataFrame</span><span class="p">(</span><span class="s s-Atom">data</span><span class="o">=</span>
+    <span class="p">{</span><span class="s s-Atom">&#39;Vendor&#39;:</span> <span class="p">[</span><span class="s s-Atom">&#39;A&#39;</span><span class="p">,</span> <span class="s s-Atom">&#39;A&#39;</span><span class="p">,</span> <span class="s s-Atom">&#39;B&#39;</span><span class="p">,</span> <span class="s s-Atom">&#39;C&#39;</span><span class="p">,</span> <span class="s s-Atom">&#39;C&#39;</span><span class="p">,</span> <span class="s s-Atom">&#39;C&#39;</span><span class="p">,</span>
+            <span class="s s-Atom">&#39;D&#39;</span><span class="p">,</span> <span class="s s-Atom">&#39;D&#39;</span><span class="p">,</span> <span class="s s-Atom">&#39;E&#39;</span><span class="p">,</span> <span class="s s-Atom">&#39;E&#39;</span><span class="p">,</span> <span class="s s-Atom">&#39;F&#39;</span><span class="p">,</span> <span class="s s-Atom">&#39;G&#39;</span><span class="p">,</span> <span class="s s-Atom">&#39;G&#39;</span><span class="p">],</span>      
+    <span class="s s-Atom">&#39;Buyer&#39;:</span><span class="p">[</span><span class="s s-Atom">&#39;BU1&#39;</span><span class="p">,</span> <span class="s s-Atom">&#39;BU3&#39;</span><span class="p">,</span> <span class="s s-Atom">&#39;BU2&#39;</span><span class="p">,</span> <span class="s s-Atom">&#39;BU1&#39;</span><span class="p">,</span> <span class="s s-Atom">&#39;BU3&#39;</span><span class="p">,</span> <span class="s s-Atom">&#39;BU4&#39;</span><span class="p">,</span>
+            <span class="s s-Atom">&#39;BU1&#39;</span><span class="p">,</span> <span class="s s-Atom">&#39;BU2&#39;</span><span class="p">,</span> <span class="s s-Atom">&#39;BU1&#39;</span><span class="p">,</span> <span class="s s-Atom">&#39;BU4&#39;</span><span class="p">,</span> <span class="s s-Atom">&#39;BU2&#39;</span><span class="p">,</span> <span class="s s-Atom">&#39;BU1&#39;</span><span class="p">,</span> <span class="s s-Atom">&#39;BU3&#39;</span><span class="p">],</span>
+    <span class="s s-Atom">&#39;Amount&#39;:</span><span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">5</span><span class="p">,</span> <span class="mi">20</span><span class="p">,</span> <span class="mi">103</span><span class="p">,</span> <span class="mi">234</span><span class="p">,</span> <span class="mi">13</span><span class="p">,</span> <span class="mi">15</span><span class="p">,</span>
+        <span class="mi">23</span><span class="p">,</span> <span class="mi">156</span><span class="p">,</span> <span class="mi">60</span><span class="p">,</span> <span class="mi">97</span><span class="p">,</span> <span class="mi">23</span><span class="p">,</span> <span class="mi">14</span><span class="p">]}</span>
 <span class="p">)</span>
 
-<span class="o">&gt;&gt;</span> <span class="n">df</span>
-<span class="o">|</span>     <span class="o">|</span>   <span class="n">Vendor</span>    <span class="o">|</span>    <span class="n">Buyer</span>     <span class="o">|</span>  <span class="n">Amount</span> <span class="o">|</span>
-<span class="o">|</span> <span class="c1">--- | ----------- | ------------ | ------- |</span>
-<span class="o">|</span> <span class="mi">0</span>   <span class="o">|</span>      <span class="n">A</span>      <span class="o">|</span>     <span class="n">BU1</span>      <span class="o">|</span>      <span class="mi">1</span>  <span class="o">|</span>
-<span class="o">|</span> <span class="mi">1</span>   <span class="o">|</span>      <span class="n">A</span>      <span class="o">|</span>     <span class="n">BU3</span>      <span class="o">|</span>      <span class="mi">5</span>  <span class="o">|</span>
-<span class="o">|</span> <span class="mi">2</span>   <span class="o">|</span>      <span class="n">B</span>      <span class="o">|</span>     <span class="n">BU2</span>      <span class="o">|</span>     <span class="mi">20</span>  <span class="o">|</span>
-<span class="o">|</span> <span class="mi">3</span>   <span class="o">|</span>      <span class="k">C</span>      <span class="o">|</span>     <span class="n">BU1</span>      <span class="o">|</span>    <span class="mi">103</span>  <span class="o">|</span>
-<span class="o">|</span> <span class="mi">4</span>   <span class="o">|</span>      <span class="k">C</span>      <span class="o">|</span>     <span class="n">BU3</span>      <span class="o">|</span>    <span class="mi">234</span>  <span class="o">|</span>
-<span class="o">|</span> <span class="mi">5</span>   <span class="o">|</span>      <span class="k">C</span>      <span class="o">|</span>     <span class="n">BU4</span>      <span class="o">|</span>     <span class="mi">13</span>  <span class="o">|</span>
-<span class="o">|</span> <span class="mi">6</span>   <span class="o">|</span>      <span class="n">D</span>      <span class="o">|</span>     <span class="n">BU1</span>      <span class="o">|</span>     <span class="mi">15</span>  <span class="o">|</span>
-<span class="o">|</span> <span class="mi">7</span>   <span class="o">|</span>      <span class="n">D</span>      <span class="o">|</span>     <span class="n">BU2</span>      <span class="o">|</span>     <span class="mi">23</span>  <span class="o">|</span>
-<span class="o">|</span> <span class="mi">8</span>   <span class="o">|</span>      <span class="n">E</span>      <span class="o">|</span>     <span class="n">BU1</span>      <span class="o">|</span>    <span class="mi">156</span>  <span class="o">|</span>
-<span class="o">|</span> <span class="mi">9</span>   <span class="o">|</span>      <span class="n">E</span>      <span class="o">|</span>     <span class="n">BU4</span>      <span class="o">|</span>     <span class="mi">60</span>  <span class="o">|</span>
-<span class="o">|</span> <span class="mi">10</span>  <span class="o">|</span>      <span class="n">F</span>      <span class="o">|</span>     <span class="n">BU2</span>      <span class="o">|</span>     <span class="mi">97</span>  <span class="o">|</span>
-<span class="o">|</span> <span class="mi">11</span>  <span class="o">|</span>      <span class="k">G</span>      <span class="o">|</span>     <span class="n">BU1</span>      <span class="o">|</span>     <span class="mi">23</span>  <span class="o">|</span>
-<span class="o">|</span> <span class="mi">12</span>  <span class="o">|</span>      <span class="k">G</span>      <span class="o">|</span>     <span class="n">BU3</span>      <span class="o">|</span>     <span class="mi">14</span>  <span class="o">|</span>
+<span class="s s-Atom">&gt;&gt;</span> <span class="s s-Atom">df</span>
+<span class="p">|</span>     <span class="p">|</span>   <span class="nv">Vendor</span>    <span class="p">|</span>    <span class="nv">Buyer</span>     <span class="p">|</span>  <span class="nv">Amount</span> <span class="p">|</span>
+<span class="p">|:-</span><span class="s s-Atom">--:</span><span class="p">|:-</span><span class="s s-Atom">----------:</span><span class="p">|:-</span><span class="s s-Atom">-----------:</span><span class="p">|</span> <span class="s s-Atom">-------:</span><span class="p">|</span>
+<span class="p">|</span> <span class="mi">0</span>   <span class="p">|</span>      <span class="nv">A</span>      <span class="p">|</span>     <span class="nv">BU1</span>      <span class="p">|</span>      <span class="mi">1</span>  <span class="p">|</span>
+<span class="p">|</span> <span class="mi">1</span>   <span class="p">|</span>      <span class="nv">A</span>      <span class="p">|</span>     <span class="nv">BU3</span>      <span class="p">|</span>      <span class="mi">5</span>  <span class="p">|</span>
+<span class="p">|</span> <span class="mi">2</span>   <span class="p">|</span>      <span class="nv">B</span>      <span class="p">|</span>     <span class="nv">BU2</span>      <span class="p">|</span>     <span class="mi">20</span>  <span class="p">|</span>
+<span class="p">|</span> <span class="mi">3</span>   <span class="p">|</span>      <span class="nv">C</span>      <span class="p">|</span>     <span class="nv">BU1</span>      <span class="p">|</span>    <span class="mi">103</span>  <span class="p">|</span>
+<span class="p">|</span> <span class="mi">4</span>   <span class="p">|</span>      <span class="nv">C</span>      <span class="p">|</span>     <span class="nv">BU3</span>      <span class="p">|</span>    <span class="mi">234</span>  <span class="p">|</span>
+<span class="p">|</span> <span class="mi">5</span>   <span class="p">|</span>      <span class="nv">C</span>      <span class="p">|</span>     <span class="nv">BU4</span>      <span class="p">|</span>     <span class="mi">13</span>  <span class="p">|</span>
+<span class="p">|</span> <span class="mi">6</span>   <span class="p">|</span>      <span class="nv">D</span>      <span class="p">|</span>     <span class="nv">BU1</span>      <span class="p">|</span>     <span class="mi">15</span>  <span class="p">|</span>
+<span class="p">|</span> <span class="mi">7</span>   <span class="p">|</span>      <span class="nv">D</span>      <span class="p">|</span>     <span class="nv">BU2</span>      <span class="p">|</span>     <span class="mi">23</span>  <span class="p">|</span>
+<span class="p">|</span> <span class="mi">8</span>   <span class="p">|</span>      <span class="nv">E</span>      <span class="p">|</span>     <span class="nv">BU1</span>      <span class="p">|</span>    <span class="mi">156</span>  <span class="p">|</span>
+<span class="p">|</span> <span class="mi">9</span>   <span class="p">|</span>      <span class="nv">E</span>      <span class="p">|</span>     <span class="nv">BU4</span>      <span class="p">|</span>     <span class="mi">60</span>  <span class="p">|</span>
+<span class="p">|</span> <span class="mi">10</span>  <span class="p">|</span>      <span class="nv">F</span>      <span class="p">|</span>     <span class="nv">BU2</span>      <span class="p">|</span>     <span class="mi">97</span>  <span class="p">|</span>
+<span class="p">|</span> <span class="mi">11</span>  <span class="p">|</span>      <span class="nv">G</span>      <span class="p">|</span>     <span class="nv">BU1</span>      <span class="p">|</span>     <span class="mi">23</span>  <span class="p">|</span>
+<span class="p">|</span> <span class="mi">12</span>  <span class="p">|</span>      <span class="nv">G</span>      <span class="p">|</span>     <span class="nv">BU3</span>      <span class="p">|</span>     <span class="mi">14</span>  <span class="p">|</span>
 </pre></div>
 
 
 <p>First, apply GroupBy and Aggregate by Vendor and Buyer:</p>
 <p>:::python</p>
-<div class="highlight"><pre><span></span><span class="o">&gt;&gt;</span> <span class="n">df_groupby_agg</span> <span class="o">=</span> <span class="n">df</span><span class="p">.</span><span class="n">groupby</span><span class="p">(</span>
-    <span class="p">[</span><span class="s1">&#39;Vendor&#39;</span><span class="p">,</span> <span class="s1">&#39;Buyer&#39;</span><span class="p">]).</span><span class="n">agg</span><span class="p">(</span>
-        <span class="n">total_value</span><span class="o">=</span><span class="n">pd</span><span class="p">.</span><span class="n">NamedAgg</span><span class="p">(</span><span class="k">column</span><span class="o">=</span><span class="s1">&#39;Amount&#39;</span><span class="p">,</span> <span class="n">aggfunc</span><span class="o">=</span><span class="n">np</span><span class="p">.</span><span class="k">sum</span><span class="p">)</span>
+<div class="highlight"><pre><span></span><span class="s s-Atom">&gt;&gt;</span> <span class="s s-Atom">df_groupby_agg</span> <span class="o">=</span> <span class="s s-Atom">df</span><span class="p">.</span><span class="nf">groupby</span><span class="p">(</span>
+    <span class="p">[</span><span class="s s-Atom">&#39;Vendor&#39;</span><span class="p">,</span> <span class="s s-Atom">&#39;Buyer&#39;</span><span class="p">]).</span><span class="nf">agg</span><span class="p">(</span>
+        <span class="s s-Atom">total_value</span><span class="o">=</span><span class="s s-Atom">pd</span><span class="p">.</span><span class="nv">NamedAgg</span><span class="p">(</span><span class="s s-Atom">column=&#39;Amount&#39;</span><span class="p">,</span> <span class="s s-Atom">aggfunc</span><span class="o">=</span><span class="s s-Atom">np</span><span class="p">.</span><span class="s s-Atom">sum</span><span class="p">)</span>
     <span class="p">)</span>
 <span class="p">)</span>
 
-<span class="o">&gt;&gt;</span> <span class="n">df_groupby_agg</span>
+<span class="s s-Atom">&gt;&gt;</span> <span class="s s-Atom">df_groupby_agg</span>
 
-<span class="o">|</span>         <span class="o">|</span>              <span class="o">|</span> <span class="n">total_value</span>  <span class="o">|</span>
-<span class="o">|</span> <span class="c1">------- | ------------ | ------------ |</span>
-<span class="o">|</span> <span class="n">Vendor</span>  <span class="o">|</span>    <span class="n">Buyer</span>     <span class="o">|</span>              <span class="o">|</span>
-<span class="o">|</span> <span class="c1">------- | ------------ | ------------ |</span>
-<span class="o">|</span> <span class="n">A</span>       <span class="o">|</span>    <span class="n">BU1</span>       <span class="o">|</span>        <span class="mi">1</span>     <span class="o">|</span>
-<span class="o">|</span>         <span class="o">|</span>    <span class="n">BU3</span>       <span class="o">|</span>        <span class="mi">5</span>     <span class="o">|</span>
-<span class="o">|</span> <span class="c1">------- | ------------ | ------------ |</span>
-<span class="o">|</span> <span class="n">B</span>       <span class="o">|</span>    <span class="n">BU2</span>       <span class="o">|</span>       <span class="mi">20</span>     <span class="o">|</span>
-<span class="o">|</span> <span class="c1">------- | ------------ | ------------ |</span>
-<span class="o">|</span> <span class="k">C</span>       <span class="o">|</span>    <span class="n">BU1</span>       <span class="o">|</span>      <span class="mi">103</span>     <span class="o">|</span>
-<span class="o">|</span>         <span class="o">|</span>    <span class="n">BU3</span>       <span class="o">|</span>      <span class="mi">234</span>     <span class="o">|</span>
-<span class="o">|</span>         <span class="o">|</span>    <span class="n">BU4</span>       <span class="o">|</span>       <span class="mi">13</span>     <span class="o">|</span>
-<span class="o">|</span> <span class="c1">------- | ------------ | ------------ |</span>
-<span class="o">|</span> <span class="n">D</span>       <span class="o">|</span>    <span class="n">BU1</span>       <span class="o">|</span>       <span class="mi">15</span>     <span class="o">|</span>
-<span class="o">|</span>         <span class="o">|</span>    <span class="n">BU2</span>       <span class="o">|</span>       <span class="mi">23</span>     <span class="o">|</span>
-<span class="o">|</span> <span class="c1">------- | ------------ | ------------ |</span>
-<span class="o">|</span> <span class="n">E</span>       <span class="o">|</span>    <span class="n">BU1</span>       <span class="o">|</span>      <span class="mi">156</span>     <span class="o">|</span>
-<span class="o">|</span>         <span class="o">|</span>    <span class="n">BU4</span>       <span class="o">|</span>       <span class="mi">60</span>     <span class="o">|</span>
-<span class="o">|</span> <span class="c1">------- | ------------ | ------------ |</span>
-<span class="o">|</span> <span class="n">F</span>       <span class="o">|</span>    <span class="n">BU2</span>       <span class="o">|</span>       <span class="mi">97</span>     <span class="o">|</span>
-<span class="o">|</span> <span class="k">G</span>       <span class="o">|</span>    <span class="n">BU1</span>       <span class="o">|</span>       <span class="mi">23</span>     <span class="o">|</span>
-<span class="o">|</span>         <span class="o">|</span>    <span class="n">BU3</span>       <span class="o">|</span>       <span class="mi">14</span>     <span class="o">|</span>
+<span class="p">|</span>         <span class="p">|</span>              <span class="p">|</span> <span class="s s-Atom">total_value</span>  <span class="p">|</span>
+<span class="p">|:-</span><span class="s s-Atom">------:</span><span class="p">|:-</span><span class="s s-Atom">-----------:</span><span class="p">|</span> <span class="s s-Atom">------------:</span><span class="p">|</span>
+<span class="p">|</span> <span class="nv">Vendor</span>  <span class="p">|</span>    <span class="nv">Buyer</span>     <span class="p">|</span>              <span class="p">|</span>
+<span class="p">|:-</span><span class="s s-Atom">------:</span><span class="p">|:-</span><span class="s s-Atom">-----------:</span><span class="p">|</span> <span class="s s-Atom">------------:</span><span class="p">|</span>
+<span class="p">|</span> <span class="nv">A</span>       <span class="p">|</span>    <span class="nv">BU1</span>       <span class="p">|</span>        <span class="mi">1</span>     <span class="p">|</span>
+<span class="p">|</span>         <span class="p">|</span>    <span class="nv">BU3</span>       <span class="p">|</span>        <span class="mi">5</span>     <span class="p">|</span>
+<span class="p">|:-</span><span class="s s-Atom">------:</span><span class="p">|:-</span><span class="s s-Atom">-----------:</span><span class="p">|</span> <span class="s s-Atom">------------:</span><span class="p">|</span>
+<span class="p">|</span> <span class="nv">B</span>       <span class="p">|</span>    <span class="nv">BU2</span>       <span class="p">|</span>       <span class="mi">20</span>     <span class="p">|</span>
+<span class="p">|:-</span><span class="s s-Atom">------:</span><span class="p">|:-</span><span class="s s-Atom">-----------:</span><span class="p">|</span> <span class="s s-Atom">------------:</span><span class="p">|</span>
+<span class="p">|</span> <span class="nv">C</span>       <span class="p">|</span>    <span class="nv">BU1</span>       <span class="p">|</span>      <span class="mi">103</span>     <span class="p">|</span>
+<span class="p">|</span>         <span class="p">|</span>    <span class="nv">BU3</span>       <span class="p">|</span>      <span class="mi">234</span>     <span class="p">|</span>
+<span class="p">|</span>         <span class="p">|</span>    <span class="nv">BU4</span>       <span class="p">|</span>       <span class="mi">13</span>     <span class="p">|</span>
+<span class="p">|:-</span><span class="s s-Atom">------:</span><span class="p">|:-</span><span class="s s-Atom">-----------:</span><span class="p">|</span> <span class="s s-Atom">------------:</span><span class="p">|</span>
+<span class="p">|</span> <span class="nv">D</span>       <span class="p">|</span>    <span class="nv">BU1</span>       <span class="p">|</span>       <span class="mi">15</span>     <span class="p">|</span>
+<span class="p">|</span>         <span class="p">|</span>    <span class="nv">BU2</span>       <span class="p">|</span>       <span class="mi">23</span>     <span class="p">|</span>
+<span class="p">|:-</span><span class="s s-Atom">------:</span><span class="p">|:-</span><span class="s s-Atom">-----------:</span><span class="p">|</span> <span class="s s-Atom">------------:</span><span class="p">|</span>
+<span class="p">|</span> <span class="nv">E</span>       <span class="p">|</span>    <span class="nv">BU1</span>       <span class="p">|</span>      <span class="mi">156</span>     <span class="p">|</span>
+<span class="p">|</span>         <span class="p">|</span>    <span class="nv">BU4</span>       <span class="p">|</span>       <span class="mi">60</span>     <span class="p">|</span>
+<span class="p">|:-</span><span class="s s-Atom">------:</span><span class="p">|:-</span><span class="s s-Atom">-----------:</span><span class="p">|</span> <span class="s s-Atom">------------:</span><span class="p">|</span>
+<span class="p">|</span> <span class="nv">F</span>       <span class="p">|</span>    <span class="nv">BU2</span>       <span class="p">|</span>       <span class="mi">97</span>     <span class="p">|</span>
+<span class="p">|</span> <span class="nv">G</span>       <span class="p">|</span>    <span class="nv">BU1</span>       <span class="p">|</span>       <span class="mi">23</span>     <span class="p">|</span>
+<span class="p">|</span>         <span class="p">|</span>    <span class="nv">BU3</span>       <span class="p">|</span>       <span class="mi">14</span>     <span class="p">|</span>
 </pre></div>
 
 
 <p>Next, create a DataFrame with the levels of the MultiIndex as columns:</p>
 <p>:::python</p>
-<div class="highlight"><pre><span></span><span class="o">&gt;&gt;</span> <span class="n">df_multiindex</span> <span class="o">=</span> <span class="n">df_groupby_agg</span><span class="p">.</span><span class="k">index</span><span class="p">.</span><span class="n">to_frame</span><span class="p">(</span><span class="k">index</span><span class="o">=</span><span class="k">False</span><span class="p">)</span>
+<div class="highlight"><pre><span></span><span class="s s-Atom">&gt;&gt;</span> <span class="s s-Atom">df_multiindex</span> <span class="o">=</span> <span class="s s-Atom">df_groupby_agg</span><span class="p">.</span><span class="s s-Atom">index</span><span class="p">.</span><span class="nf">to_frame</span><span class="p">(</span><span class="s s-Atom">index</span><span class="o">=</span><span class="nv">False</span><span class="p">)</span>
 
-<span class="o">&gt;&gt;</span> <span class="n">df_multiindex</span>
+<span class="s s-Atom">&gt;&gt;</span> <span class="s s-Atom">df_multiindex</span>
 
-<span class="o">|</span>     <span class="o">|</span>   <span class="n">Vendor</span>  <span class="o">|</span>   <span class="n">Buyer</span>  <span class="o">|</span>
-<span class="o">|</span> <span class="c1">--- | --------- | -------- |</span>
-<span class="o">|</span> <span class="mi">0</span>   <span class="o">|</span>       <span class="n">A</span>   <span class="o">|</span>    <span class="n">BU1</span>   <span class="o">|</span>
-<span class="o">|</span> <span class="mi">1</span>   <span class="o">|</span>       <span class="n">A</span>   <span class="o">|</span>    <span class="n">BU3</span>   <span class="o">|</span>
-<span class="o">|</span> <span class="mi">2</span>   <span class="o">|</span>       <span class="n">B</span>   <span class="o">|</span>    <span class="n">BU2</span>   <span class="o">|</span>
-<span class="o">|</span> <span class="mi">3</span>   <span class="o">|</span>       <span class="k">C</span>   <span class="o">|</span>    <span class="n">BU1</span>   <span class="o">|</span>
-<span class="o">|</span> <span class="mi">4</span>   <span class="o">|</span>       <span class="k">C</span>   <span class="o">|</span>    <span class="n">BU3</span>   <span class="o">|</span>
-<span class="o">|</span> <span class="mi">5</span>   <span class="o">|</span>       <span class="k">C</span>   <span class="o">|</span>    <span class="n">BU4</span>   <span class="o">|</span>
-<span class="o">|</span> <span class="mi">6</span>   <span class="o">|</span>       <span class="n">D</span>   <span class="o">|</span>    <span class="n">BU1</span>   <span class="o">|</span>
-<span class="o">|</span> <span class="mi">7</span>   <span class="o">|</span>       <span class="n">D</span>   <span class="o">|</span>    <span class="n">BU2</span>   <span class="o">|</span>
-<span class="o">|</span> <span class="mi">8</span>   <span class="o">|</span>       <span class="n">E</span>   <span class="o">|</span>    <span class="n">BU1</span>   <span class="o">|</span>
-<span class="o">|</span> <span class="mi">9</span>   <span class="o">|</span>       <span class="n">E</span>   <span class="o">|</span>    <span class="n">BU4</span>   <span class="o">|</span>
-<span class="o">|</span> <span class="mi">10</span>  <span class="o">|</span>       <span class="n">F</span>   <span class="o">|</span>    <span class="n">BU2</span>   <span class="o">|</span>
-<span class="o">|</span> <span class="mi">11</span>  <span class="o">|</span>       <span class="k">G</span>   <span class="o">|</span>    <span class="n">BU1</span>   <span class="o">|</span>
-<span class="o">|</span> <span class="mi">12</span>  <span class="o">|</span>       <span class="k">G</span>   <span class="o">|</span>    <span class="n">BU3</span>   <span class="o">|</span>
+<span class="p">|</span>     <span class="p">|</span>   <span class="nv">Vendor</span>  <span class="p">|</span>   <span class="nv">Buyer</span>  <span class="p">|</span>
+<span class="p">|:-</span><span class="s s-Atom">--:</span><span class="p">|:-</span><span class="s s-Atom">--------:</span><span class="p">|:-</span><span class="s s-Atom">-------:</span><span class="p">|</span>
+<span class="p">|</span> <span class="mi">0</span>   <span class="p">|</span>       <span class="nv">A</span>   <span class="p">|</span>    <span class="nv">BU1</span>   <span class="p">|</span>
+<span class="p">|</span> <span class="mi">1</span>   <span class="p">|</span>       <span class="nv">A</span>   <span class="p">|</span>    <span class="nv">BU3</span>   <span class="p">|</span>
+<span class="p">|</span> <span class="mi">2</span>   <span class="p">|</span>       <span class="nv">B</span>   <span class="p">|</span>    <span class="nv">BU2</span>   <span class="p">|</span>
+<span class="p">|</span> <span class="mi">3</span>   <span class="p">|</span>       <span class="nv">C</span>   <span class="p">|</span>    <span class="nv">BU1</span>   <span class="p">|</span>
+<span class="p">|</span> <span class="mi">4</span>   <span class="p">|</span>       <span class="nv">C</span>   <span class="p">|</span>    <span class="nv">BU3</span>   <span class="p">|</span>
+<span class="p">|</span> <span class="mi">5</span>   <span class="p">|</span>       <span class="nv">C</span>   <span class="p">|</span>    <span class="nv">BU4</span>   <span class="p">|</span>
+<span class="p">|</span> <span class="mi">6</span>   <span class="p">|</span>       <span class="nv">D</span>   <span class="p">|</span>    <span class="nv">BU1</span>   <span class="p">|</span>
+<span class="p">|</span> <span class="mi">7</span>   <span class="p">|</span>       <span class="nv">D</span>   <span class="p">|</span>    <span class="nv">BU2</span>   <span class="p">|</span>
+<span class="p">|</span> <span class="mi">8</span>   <span class="p">|</span>       <span class="nv">E</span>   <span class="p">|</span>    <span class="nv">BU1</span>   <span class="p">|</span>
+<span class="p">|</span> <span class="mi">9</span>   <span class="p">|</span>       <span class="nv">E</span>   <span class="p">|</span>    <span class="nv">BU4</span>   <span class="p">|</span>
+<span class="p">|</span> <span class="mi">10</span>  <span class="p">|</span>       <span class="nv">F</span>   <span class="p">|</span>    <span class="nv">BU2</span>   <span class="p">|</span>
+<span class="p">|</span> <span class="mi">11</span>  <span class="p">|</span>       <span class="nv">G</span>   <span class="p">|</span>    <span class="nv">BU1</span>   <span class="p">|</span>
+<span class="p">|</span> <span class="mi">12</span>  <span class="p">|</span>       <span class="nv">G</span>   <span class="p">|</span>    <span class="nv">BU3</span>   <span class="p">|</span>
 </pre></div>
 
 

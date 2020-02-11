@@ -3,9 +3,11 @@ Date: 2020-01-09 18:06
 Category: Pandas
 Status: draft
 
-Problem: From a MultiIndex dataframe, determine the total number of elements in the Buyer column for each Vendor.
+## Problem
 
-What I did:
+From a MultiIndex dataframe, determine the total number of elements in the Buyer column for each Vendor.
+
+## What I did
 
 
 :::python
@@ -18,6 +20,10 @@ What I did:
         'Amount':[1, 5, 20, 103, 234, 13, 15,
             23, 156, 60, 97, 23, 14]}
     )
+
+    >> df
+
+
 
 
 

@@ -3,11 +3,11 @@ Date: 2020-01-09 18:06
 Category: Pandas
 Status: published
 
-## Problem:
+## Problem
 
 From a MultiIndex dataframe, determine the total number of elements in the Buyer column for each Vendor.
 
-## What I did:
+## What I did
 
 Let's say we have the following DataFrame:
   
@@ -24,7 +24,7 @@ Let's say we have the following DataFrame:
 
     >> df
     |     |   Vendor    |    Buyer     |  Amount |
-    | --- | ----------- | ------------ | ------- |
+    |:---:|:-----------:|:------------:| -------:|
     | 0   |      A      |     BU1      |      1  |
     | 1   |      A      |     BU3      |      5  |
     | 2   |      B      |     BU2      |     20  |
@@ -52,24 +52,24 @@ First, apply GroupBy and Aggregate by Vendor and Buyer:
     >> df_groupby_agg
 
     |         |              | total_value  |
-    | ------- | ------------ | ------------ |
+    |:-------:|:------------:| ------------:|
     | Vendor  |    Buyer     |              |
-    | ------- | ------------ | ------------ |
+    |:-------:|:------------:| ------------:|
     | A       |    BU1       |        1     |
     |         |    BU3       |        5     |
-    | ------- | ------------ | ------------ |
+    |:-------:|:------------:| ------------:|
     | B       |    BU2       |       20     |
-    | ------- | ------------ | ------------ |
+    |:-------:|:------------:| ------------:|
     | C       |    BU1       |      103     |
     |         |    BU3       |      234     |
     |         |    BU4       |       13     |
-    | ------- | ------------ | ------------ |
+    |:-------:|:------------:| ------------:|
     | D       |    BU1       |       15     |
     |         |    BU2       |       23     |
-    | ------- | ------------ | ------------ |
+    |:-------:|:------------:| ------------:|
     | E       |    BU1       |      156     |
     |         |    BU4       |       60     |
-    | ------- | ------------ | ------------ |
+    |:-------:|:------------:| ------------:|
     | F       |    BU2       |       97     |
     | G       |    BU1       |       23     |
     |         |    BU3       |       14     |
@@ -83,7 +83,7 @@ Next, create a DataFrame with the levels of the MultiIndex as columns:
     >> df_multiindex
 
     |     |   Vendor  |   Buyer  |
-    | --- | --------- | -------- |
+    |:---:|:---------:|:--------:|
     | 0   |       A   |    BU1   |
     | 1   |       A   |    BU3   |
     | 2   |       B   |    BU2   |

@@ -32,8 +32,9 @@
         </address>
 <p>In <a href="https://datadiaries.commons.host/category/pandas.html">Pandas</a>.</p>
 
-</footer><!-- /.post-info -->      <p>Problem: From a MultiIndex dataframe, determine the total number of elements in the Buyer column for each Vendor.</p>
-<p>What I did:</p>
+</footer><!-- /.post-info -->      <h2>Problem</h2>
+<p>From a MultiIndex dataframe, determine the total number of elements in the Buyer column for each Vendor.</p>
+<h2>What I did</h2>
 <p>:::python</p>
 <div class="highlight"><pre><span></span><span class="o">&gt;&gt;</span> <span class="n">df</span> <span class="o">=</span> <span class="n">pd</span><span class="p">.</span><span class="n">DataFrame</span><span class="p">(</span><span class="k">data</span><span class="o">=</span>
     <span class="err">{</span><span class="s1">&#39;Vendor&#39;</span><span class="p">:</span> <span class="p">[</span><span class="s1">&#39;A&#39;</span><span class="p">,</span> <span class="s1">&#39;A&#39;</span><span class="p">,</span> <span class="s1">&#39;B&#39;</span><span class="p">,</span> <span class="s1">&#39;C&#39;</span><span class="p">,</span> <span class="s1">&#39;C&#39;</span><span class="p">,</span> <span class="s1">&#39;C&#39;</span><span class="p">,</span>
@@ -43,6 +44,10 @@
     <span class="s1">&#39;Amount&#39;</span><span class="p">:[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">5</span><span class="p">,</span> <span class="mi">20</span><span class="p">,</span> <span class="mi">103</span><span class="p">,</span> <span class="mi">234</span><span class="p">,</span> <span class="mi">13</span><span class="p">,</span> <span class="mi">15</span><span class="p">,</span>
         <span class="mi">23</span><span class="p">,</span> <span class="mi">156</span><span class="p">,</span> <span class="mi">60</span><span class="p">,</span> <span class="mi">97</span><span class="p">,</span> <span class="mi">23</span><span class="p">,</span> <span class="mi">14</span><span class="p">]</span><span class="err">}</span>
 <span class="p">)</span>
+
+<span class="o">&gt;&gt;</span> <span class="n">df</span>
+
+
 
 
 

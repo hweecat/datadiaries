@@ -1,0 +1,160 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+        <meta charset="utf-8" />
+        <title>Conditional Colors in Plotly Tables</title>
+        <link rel="stylesheet" href="https://datadiaries.commons.host/theme/css/main.css" />
+</head>
+
+<body id="index" class="home">
+        <header id="banner" class="body">
+                <h1><a href="https://datadiaries.commons.host/">Today I Learnt - Data Engineering Diaries </a></h1>
+                <nav><ul>
+                    <li class="active"><a href="https://datadiaries.commons.host/category/pandas.html">Pandas</a></li>
+                </ul></nav>
+        </header><!-- /#banner -->
+<section id="content" class="body">
+  <article>
+    <header>
+      <h1 class="entry-title">
+        <a href="https://datadiaries.commons.host/drafts/conditional-colors-in-plotly-tables.html" rel="bookmark"
+           title="Permalink to Conditional Colors in Plotly Tables">Conditional Colors in Plotly Tables</a></h1>
+    </header>
+
+    <div class="entry-content">
+<footer class="post-info">
+        <abbr class="published" title="2020-01-09T18:06:00+08:00">
+                Published: Thu 09 January 2020
+        </abbr>
+
+        <address class="vcard author">
+                By                         <a class="url fn" href="https://datadiaries.commons.host/author/ong-chin-hwee.html">Ong Chin Hwee</a>
+        </address>
+<p>In <a href="https://datadiaries.commons.host/category/pandas.html">Pandas</a>.</p>
+
+</footer><!-- /.post-info -->      <h2>Problem</h2>
+<p>Generate a data table in Plotly that has the following features:</p>
+<ol>
+<li>Alternating cell and line colors for odd/even rows</li>
+<li>Unique cell color on first column</li>
+<li>For third column onwards, color cells using two different colors based on two levels of upper-bound/lower-bound conditions</li>
+</ol>
+<h2>What I did</h2>
+<h3>Step 1: Generate data table in Plotly</h3>
+<p>Due to limitations in displaying MultiIndex DataFrames in Plotly, the original MultiIndex DataFrame has to be manipulated in a way that allows Plotly to read the cell values in the DataFrame</p>
+<h3>Step 1: Create backend table for metric used in the conditions</h3>
+<p>For example, I would like to use a ratio of two variables as one of the metrics for the upper-bound/lower-bound conditions. As the ratio is not explicitly displayed on the data table, I create a backend table to store the ratios.</p>
+<p>:::python</p>
+<div class="highlight"><pre><span></span><span class="n">def</span> <span class="n">pv_po_ratio_analysis</span><span class="p">(</span><span class="n">df_table</span><span class="p">,</span> <span class="n">column_level1_agg</span><span class="p">):</span>
+
+    <span class="n">po_count_df</span> <span class="o">=</span> <span class="n">df_table</span><span class="p">[</span>
+                    <span class="n">df_table</span><span class="p">[</span><span class="s1">&#39;Item&#39;</span><span class="p">]</span> <span class="o">==</span> <span class="s1">&#39;PO Count&#39;</span>
+                    <span class="p">].</span><span class="n">set_index</span><span class="p">(</span>
+                        <span class="p">[</span><span class="n">column_level1_agg</span><span class="p">,</span> <span class="s1">&#39;Item&#39;</span><span class="p">]</span>
+                        <span class="p">).</span><span class="n">reset_index</span><span class="p">(</span><span class="s1">&#39;Item&#39;</span>
+                                    <span class="p">).</span><span class="k">drop</span><span class="p">(</span><span class="n">columns</span><span class="o">=</span><span class="s1">&#39;Item&#39;</span><span class="p">)</span>
+
+    <span class="n">total_pv_df</span> <span class="o">=</span> <span class="n">df_table</span><span class="p">[</span>
+                    <span class="n">df_table</span><span class="p">[</span><span class="s1">&#39;Item&#39;</span><span class="p">]</span> <span class="o">==</span> <span class="s1">&#39;Total PV ($)&#39;</span>
+                    <span class="p">].</span><span class="n">set_index</span><span class="p">(</span>
+                        <span class="p">[</span><span class="n">column_level1_agg</span><span class="p">,</span> <span class="s1">&#39;Item&#39;</span><span class="p">]</span>
+                        <span class="p">).</span><span class="n">reset_index</span><span class="p">(</span><span class="s1">&#39;Item&#39;</span>
+                                    <span class="p">).</span><span class="k">drop</span><span class="p">(</span><span class="n">columns</span><span class="o">=</span><span class="s1">&#39;Item&#39;</span><span class="p">)</span>
+
+    <span class="n">pv_po_ratio_df</span> <span class="o">=</span> <span class="n">total_pv_df</span><span class="p">.</span><span class="n">div</span><span class="p">(</span><span class="n">po_count_df</span><span class="p">,</span> <span class="n">fill_value</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+
+    <span class="k">return</span> <span class="n">pv_po_ratio_df</span>
+</pre></div>
+
+
+<h3>Step 2: Define conditions for conditional formatting of cell colors</h3>
+<p>For this example, I would like to color cells using two different colors based on two levels of conditions:</p>
+<ol>
+<li>PO Count &gt;= T1</li>
+<li>PV/PO ratio &lt; T2 (pink) or PV/PO ratio &gt; T3 (yellow)</li>
+</ol>
+<p>Criteria no. 1 on PO Count needs to be fulfilled before traversing down to criteria 2 on PV/PO ratio.</p>
+<p>:::python</p>
+<div class="highlight"><pre><span></span><span class="n">po_count_df</span> <span class="o">=</span> <span class="n">df_table</span><span class="p">[</span>
+                <span class="n">df_table</span><span class="p">[</span><span class="s1">&#39;Item&#39;</span><span class="p">]</span> <span class="o">==</span> <span class="s1">&#39;PO Count&#39;</span>
+                <span class="p">].</span><span class="n">set_index</span><span class="p">(</span>
+                    <span class="p">[</span><span class="n">column_level1_agg</span><span class="p">,</span> <span class="s1">&#39;Item&#39;</span><span class="p">]</span>
+                    <span class="p">).</span><span class="n">reset_index</span><span class="p">(</span><span class="s1">&#39;Item&#39;</span>
+                                  <span class="p">).</span><span class="k">drop</span><span class="p">(</span><span class="n">columns</span><span class="o">=</span><span class="s1">&#39;Item&#39;</span><span class="p">)</span>
+
+<span class="n">pv_df</span> <span class="o">=</span> <span class="n">df_table</span><span class="p">[</span>
+                <span class="n">df_table</span><span class="p">[</span><span class="s1">&#39;Item&#39;</span><span class="p">]</span> <span class="o">==</span> <span class="s1">&#39;Total PV ($)&#39;</span>
+                <span class="p">].</span><span class="n">set_index</span><span class="p">(</span>
+                    <span class="p">[</span><span class="n">column_level1_agg</span><span class="p">,</span> <span class="s1">&#39;Item&#39;</span><span class="p">]</span>
+                    <span class="p">).</span><span class="n">reset_index</span><span class="p">(</span><span class="s1">&#39;Item&#39;</span>
+                                  <span class="p">).</span><span class="k">drop</span><span class="p">(</span><span class="n">columns</span><span class="o">=</span><span class="s1">&#39;Item&#39;</span><span class="p">)</span>
+
+<span class="n">pv_po_ratio_df</span> <span class="o">=</span> <span class="n">pv_po_ratio_analysis</span><span class="p">(</span><span class="n">df_table</span><span class="p">,</span> <span class="n">column_level1_agg</span><span class="p">)</span>
+
+<span class="o">#</span> <span class="k">set</span> <span class="n">criterion</span> <span class="k">using</span> <span class="nb">binary</span> <span class="n">operators</span>
+
+<span class="n">is_po_count_gt_threshold</span> <span class="o">=</span> <span class="n">po_count_df</span><span class="p">.</span><span class="n">ge</span><span class="p">(</span><span class="mi">30</span><span class="p">)</span>
+
+<span class="n">is_pv_po_ratio_lt_threshold1</span> <span class="o">=</span> <span class="n">pv_po_ratio_df</span><span class="p">.</span><span class="n">lt</span><span class="p">(</span><span class="mi">2000</span><span class="p">)</span>
+
+<span class="n">is_pv_po_ratio_gt_threshold2</span> <span class="o">=</span> <span class="n">pv_po_ratio_df</span><span class="p">.</span><span class="n">gt</span><span class="p">(</span><span class="mi">5000</span><span class="p">)</span>
+</pre></div>
+
+
+<h4>Step 3: Transform table to Plotly-compatible format</h4>
+<p>According to the <a href="https://plot.ly/python/table/">documentation for Tables in Python with Plotly</a>, the data are arranged in a grid of rows and columns and the grid is represented as a vector of column vectors (which is known as a column-major order).</p>
+<p>When cell values for a Table object is defined in the following manner:</p>
+<p>:::python</p>
+<div class="highlight"><pre><span></span><span class="n">fig</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">go</span><span class="p">.</span><span class="n">Figure</span><span class="p">(</span><span class="k">data</span><span class="o">=[</span><span class="n">go.Table(</span>
+<span class="n">    header=dict(</span>
+<span class="n">        values=[&#39;A Scores&#39;, &#39;B Scores&#39;</span><span class="o">]</span><span class="p">),</span><span class="w"></span>
+<span class="w">    </span><span class="n">cells</span><span class="o">=</span><span class="n">dict</span><span class="p">(</span><span class="w"></span>
+<span class="w">        </span><span class="k">values</span><span class="o">=[</span><span class="n">[100, 90, 80, 90</span><span class="o">]</span><span class="p">,</span><span class="w"> </span><span class="o">[</span><span class="n">95, 85, 75, 95</span><span class="o">]</span><span class="err">]</span><span class="p">))</span><span class="w"></span>
+<span class="w">    </span><span class="err">]</span><span class="p">)</span><span class="w"></span>
+
+<span class="n">fig</span><span class="p">.</span><span class="n">show</span><span class="p">()</span><span class="w"></span>
+</pre></div>
+
+
+<p>the Table object would be displayed column-wise in the following manner:</p>
+<div class="highlight"><pre><span></span><span class="p">|</span>  <span class="nv">A</span> <span class="nv">Scores</span>   <span class="p">|</span>  <span class="nv">B</span> <span class="nv">Scores</span>   <span class="p">|</span>
+<span class="p">|:-</span><span class="s s-Atom">----------:</span><span class="p">|:-</span><span class="s s-Atom">----------:</span><span class="p">|</span>
+<span class="p">|</span>     <span class="mi">100</span>     <span class="p">|</span>     <span class="mi">95</span>      <span class="p">|</span>
+<span class="p">|</span>     <span class="mi">90</span>      <span class="p">|</span>     <span class="mi">85</span>      <span class="p">|</span>
+<span class="p">|</span>     <span class="mi">80</span>      <span class="p">|</span>     <span class="mi">75</span>      <span class="p">|</span>
+<span class="p">|</span>     <span class="mi">90</span>      <span class="p">|</span>     <span class="mi">95</span>      <span class="p">|</span>
+</pre></div>
+    </div><!-- /.entry-content -->
+
+  </article>
+</section>
+        <section id="extras" class="body">
+                <div class="blogroll">
+                        <h2>links</h2>
+                        <ul>
+                            <li><a href="https://ongchinhwee.me/">My Portfolio</a></li>
+                            <li><a href="https://github.com/pandas-dev/pandas/">pandas</a></li>
+                            <li><a href="https://ongchinhwee.me/about#talks">Talks</a></li>
+                        </ul>
+                </div><!-- /.blogroll -->
+                <div class="social">
+                        <h2>social</h2>
+                        <ul>
+
+                            <li><a href="https://github.com/hweecat">GitHub</a></li>
+                            <li><a href="https://linkedin.com/in/ongchinhwee">Linkedin</a></li>
+                            <li><a href="https://twitter.com/ongchinhwee">Twitter</a></li>
+                        </ul>
+                </div><!-- /.social -->
+        </section><!-- /#extras -->
+
+        <footer id="contentinfo" class="body">
+                <address id="about" class="vcard body">
+                Proudly powered by <a href="http://getpelican.com/">Pelican</a>, which takes great advantage of <a href="http://python.org">Python</a>.
+                </address><!-- /#about -->
+
+                <p>The theme is by <a href="http://coding.smashingmagazine.com/2009/08/04/designing-a-html-5-layout-from-scratch/">Smashing Magazine</a>, thanks!</p>
+        </footer><!-- /#contentinfo -->
+
+</body>
+</html>
