@@ -33,53 +33,211 @@
 <p>In <a href="https://datadiaries.commons.host/category/pandas.html">Pandas</a>.</p>
 
 </footer><!-- /.post-info -->      <h2>Problem</h2>
-<p>From a MultiIndex dataframe, determine the total number of elements in the Buyer column for each Vendor.</p>
-<h2>What I did</h2>
+<p>From a Pandas DataFrame, massage the DataFrame into a format where order Count and Total Amount could be determined for each Vendor and each Vendor-Buyer combination.</p>
 <p>:::python</p>
 <div class="highlight"><pre><span></span><span class="o">&gt;&gt;</span> <span class="n">df</span> <span class="o">=</span> <span class="n">pd</span><span class="p">.</span><span class="n">DataFrame</span><span class="p">(</span><span class="k">data</span><span class="o">=</span>
-    <span class="err">{</span><span class="s1">&#39;Vendor&#39;</span><span class="p">:</span> <span class="p">[</span><span class="s1">&#39;A&#39;</span><span class="p">,</span> <span class="s1">&#39;A&#39;</span><span class="p">,</span> <span class="s1">&#39;B&#39;</span><span class="p">,</span> <span class="s1">&#39;C&#39;</span><span class="p">,</span> <span class="s1">&#39;C&#39;</span><span class="p">,</span> <span class="s1">&#39;C&#39;</span><span class="p">,</span>
-            <span class="s1">&#39;D&#39;</span><span class="p">,</span> <span class="s1">&#39;D&#39;</span><span class="p">,</span> <span class="s1">&#39;E&#39;</span><span class="p">,</span> <span class="s1">&#39;E&#39;</span><span class="p">,</span> <span class="s1">&#39;F&#39;</span><span class="p">,</span> <span class="s1">&#39;G&#39;</span><span class="p">,</span> <span class="s1">&#39;G&#39;</span><span class="p">],</span>      
-    <span class="s1">&#39;Buyer&#39;</span><span class="p">:[</span><span class="s1">&#39;BU1&#39;</span><span class="p">,</span> <span class="s1">&#39;BU3&#39;</span><span class="p">,</span> <span class="s1">&#39;BU2&#39;</span><span class="p">,</span> <span class="s1">&#39;BU1&#39;</span><span class="p">,</span> <span class="s1">&#39;BU3&#39;</span><span class="p">,</span> <span class="s1">&#39;BU4&#39;</span><span class="p">,</span>
-            <span class="s1">&#39;BU1&#39;</span><span class="p">,</span> <span class="s1">&#39;BU2&#39;</span><span class="p">,</span> <span class="s1">&#39;BU1&#39;</span><span class="p">,</span> <span class="s1">&#39;BU4&#39;</span><span class="p">,</span> <span class="s1">&#39;BU2&#39;</span><span class="p">,</span> <span class="s1">&#39;BU1&#39;</span><span class="p">,</span> <span class="s1">&#39;BU3&#39;</span><span class="p">],</span>
-    <span class="s1">&#39;Amount&#39;</span><span class="p">:[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">5</span><span class="p">,</span> <span class="mi">20</span><span class="p">,</span> <span class="mi">103</span><span class="p">,</span> <span class="mi">234</span><span class="p">,</span> <span class="mi">13</span><span class="p">,</span> <span class="mi">15</span><span class="p">,</span>
-        <span class="mi">23</span><span class="p">,</span> <span class="mi">156</span><span class="p">,</span> <span class="mi">60</span><span class="p">,</span> <span class="mi">97</span><span class="p">,</span> <span class="mi">23</span><span class="p">,</span> <span class="mi">14</span><span class="p">]</span><span class="err">}</span>
-<span class="p">)</span>
+    <span class="err">{</span><span class="s1">&#39;Vendor&#39;</span><span class="p">:</span> <span class="p">[</span><span class="s1">&#39;A&#39;</span><span class="p">,</span> <span class="s1">&#39;A&#39;</span><span class="p">,</span> <span class="s1">&#39;A&#39;</span><span class="p">,</span> <span class="s1">&#39;B&#39;</span><span class="p">,</span> <span class="s1">&#39;B&#39;</span><span class="p">,</span> <span class="s1">&#39;C&#39;</span><span class="p">,</span> <span class="s1">&#39;C&#39;</span><span class="p">,</span> <span class="s1">&#39;C&#39;</span><span class="p">,</span> <span class="s1">&#39;C&#39;</span><span class="p">,</span>
+            <span class="s1">&#39;D&#39;</span><span class="p">,</span> <span class="s1">&#39;D&#39;</span><span class="p">,</span> <span class="s1">&#39;E&#39;</span><span class="p">,</span> <span class="s1">&#39;E&#39;</span><span class="p">,</span> <span class="s1">&#39;E&#39;</span><span class="p">,</span> <span class="s1">&#39;E&#39;</span><span class="p">,</span> <span class="s1">&#39;E&#39;</span><span class="p">],</span>      
+    <span class="s1">&#39;Buyer&#39;</span><span class="p">:[</span><span class="s1">&#39;BU1&#39;</span><span class="p">,</span> <span class="s1">&#39;BU2&#39;</span><span class="p">,</span> <span class="s1">&#39;BU2&#39;</span><span class="p">,</span> <span class="s1">&#39;BU2&#39;</span><span class="p">,</span> <span class="s1">&#39;BU2&#39;</span><span class="p">,</span> <span class="s1">&#39;BU1&#39;</span><span class="p">,</span> <span class="s1">&#39;BU2&#39;</span><span class="p">,</span> <span class="s1">&#39;BU2&#39;</span><span class="p">,</span> <span class="s1">&#39;BU2&#39;</span><span class="p">,</span>
+            <span class="s1">&#39;BU1&#39;</span><span class="p">,</span> <span class="s1">&#39;BU2&#39;</span><span class="p">,</span> <span class="s1">&#39;BU1&#39;</span><span class="p">,</span> <span class="s1">&#39;BU2&#39;</span><span class="p">,</span> <span class="s1">&#39;BU2&#39;</span><span class="p">,</span> <span class="s1">&#39;BU1&#39;</span><span class="p">,</span> <span class="s1">&#39;BU2&#39;</span><span class="p">],</span>
+    <span class="s1">&#39;Amount&#39;</span><span class="p">:[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">5</span><span class="p">,</span> <span class="mi">10</span><span class="p">,</span> <span class="mi">20</span><span class="p">,</span> <span class="mi">40</span><span class="p">,</span> <span class="mi">103</span><span class="p">,</span> <span class="mi">234</span><span class="p">,</span> <span class="mi">13</span><span class="p">,</span> <span class="mi">15</span><span class="p">,</span> <span class="mi">30</span><span class="p">,</span>
+        <span class="mi">23</span><span class="p">,</span> <span class="mi">156</span><span class="p">,</span> <span class="mi">60</span><span class="p">,</span> <span class="mi">97</span><span class="p">,</span> <span class="mi">23</span><span class="p">,</span> <span class="mi">14</span><span class="p">]</span><span class="err">}</span><span class="p">)</span>
 
 <span class="o">&gt;&gt;</span> <span class="n">df</span>
 
+   <span class="n">Vendor</span> <span class="n">Buyer</span>  <span class="n">Amount</span>
+<span class="mi">0</span>       <span class="n">A</span>   <span class="n">BU1</span>       <span class="mi">1</span>
+<span class="mi">1</span>       <span class="n">A</span>   <span class="n">BU2</span>       <span class="mi">5</span>
+<span class="mi">2</span>       <span class="n">A</span>   <span class="n">BU2</span>      <span class="mi">10</span>
+<span class="mi">3</span>       <span class="n">B</span>   <span class="n">BU2</span>      <span class="mi">20</span>
+<span class="mi">4</span>       <span class="n">B</span>   <span class="n">BU2</span>      <span class="mi">40</span>
+<span class="mi">5</span>       <span class="k">C</span>   <span class="n">BU1</span>     <span class="mi">103</span>
+<span class="mi">6</span>       <span class="k">C</span>   <span class="n">BU2</span>     <span class="mi">234</span>
+<span class="mi">7</span>       <span class="k">C</span>   <span class="n">BU2</span>      <span class="mi">13</span>
+<span class="mi">8</span>       <span class="k">C</span>   <span class="n">BU2</span>      <span class="mi">15</span>
+<span class="mi">9</span>       <span class="n">D</span>   <span class="n">BU1</span>      <span class="mi">30</span>
+<span class="mi">10</span>      <span class="n">D</span>   <span class="n">BU2</span>      <span class="mi">23</span>
+<span class="mi">11</span>      <span class="n">E</span>   <span class="n">BU1</span>     <span class="mi">156</span>
+<span class="mi">12</span>      <span class="n">E</span>   <span class="n">BU2</span>      <span class="mi">60</span>
+<span class="mi">13</span>      <span class="n">E</span>   <span class="n">BU2</span>      <span class="mi">97</span>
+<span class="mi">14</span>      <span class="n">E</span>   <span class="n">BU1</span>      <span class="mi">23</span>
+<span class="mi">15</span>      <span class="n">E</span>   <span class="n">BU2</span>      <span class="mi">14</span>
+</pre></div>
 
 
-
-
-<span class="o">&gt;&gt;</span> <span class="n">agg_df</span> <span class="o">=</span> <span class="err">\</span>
+<h2>What I did</h2>
+<p>First, compute the aggregate values (Count, Total Amount ($)) for Vendor-Buyer combinations by using GroupBy aggregation (groupby().agg()):</p>
+<p>:::python</p>
+<div class="highlight"><pre><span></span><span class="o">&gt;&gt;</span> <span class="n">agg_df</span> <span class="o">=</span> <span class="err">\</span>
     <span class="n">df</span><span class="p">.</span><span class="n">groupby</span><span class="p">(</span>
-        <span class="p">[</span><span class="n">column_level0_agg</span><span class="p">,</span> <span class="n">column_level1_agg</span><span class="p">]).</span><span class="n">agg</span><span class="p">(</span><span class="o">**</span><span class="err">{</span>
-            <span class="s1">&#39;Transaction Count&#39;</span><span class="p">:</span> <span class="n">pd</span><span class="p">.</span><span class="n">NamedAgg</span><span class="p">(</span><span class="k">column</span><span class="o">=</span><span class="s1">&#39;Transaction No.&#39;</span><span class="p">,</span> <span class="n">aggfunc</span><span class="o">=</span><span class="s1">&#39;nunique&#39;</span><span class="p">),</span>
-            <span class="s1">&#39;Total PV ($)&#39;</span><span class="p">:</span> <span class="n">pd</span><span class="p">.</span><span class="n">NamedAgg</span><span class="p">(</span><span class="k">column</span><span class="o">=</span><span class="s1">&#39;PO Value in SGD&#39;</span><span class="p">,</span> <span class="n">aggfunc</span><span class="o">=</span><span class="n">np</span><span class="p">.</span><span class="k">sum</span><span class="p">)</span>
+        <span class="p">[</span><span class="s1">&#39;Vendor&#39;</span><span class="p">,</span> <span class="s1">&#39;Buyer&#39;</span><span class="p">]).</span><span class="n">agg</span><span class="p">(</span><span class="o">**</span><span class="err">{</span>
+            <span class="s1">&#39;Count&#39;</span><span class="p">:</span> <span class="n">pd</span><span class="p">.</span><span class="n">NamedAgg</span><span class="p">(</span><span class="k">column</span><span class="o">=</span><span class="s1">&#39;Amount&#39;</span><span class="p">,</span> <span class="n">aggfunc</span><span class="o">=</span><span class="s1">&#39;count&#39;</span><span class="p">),</span>
+            <span class="s1">&#39;Total Amount ($)&#39;</span><span class="p">:</span> <span class="n">pd</span><span class="p">.</span><span class="n">NamedAgg</span><span class="p">(</span><span class="k">column</span><span class="o">=</span><span class="s1">&#39;Amount&#39;</span><span class="p">,</span> <span class="n">aggfunc</span><span class="o">=</span><span class="n">np</span><span class="p">.</span><span class="k">sum</span><span class="p">)</span>
         <span class="err">}</span><span class="p">)</span>
 
-<span class="n">agg_df</span><span class="p">.</span><span class="n">reset_index</span><span class="p">(</span>
-            <span class="n">inplace</span><span class="o">=</span><span class="k">True</span><span class="p">).</span><span class="n">sort_values</span><span class="p">(</span>
-                <span class="n">column_level1_agg</span><span class="p">,</span> <span class="n">column_level0_agg</span><span class="p">],</span> <span class="n">inplace</span><span class="o">=</span><span class="k">True</span><span class="p">)</span>
+<span class="o">&gt;&gt;</span> <span class="n">agg_df</span>
 
-<span class="n">df_melt</span> <span class="o">=</span> <span class="n">agg_df</span><span class="p">.</span><span class="n">melt</span><span class="p">(</span>
-        <span class="n">id_vars</span><span class="o">=</span><span class="p">[</span><span class="n">column_level0_agg</span><span class="p">,</span> <span class="n">column_level1_agg</span><span class="p">],</span>
-        <span class="n">value_vars</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;PO Count&#39;</span><span class="p">,</span> <span class="s1">&#39;Total PV ($)&#39;</span><span class="p">]</span>
+              <span class="k">Count</span>  <span class="n">Total</span> <span class="n">Amount</span> <span class="p">(</span><span class="err">$</span><span class="p">)</span>
+<span class="n">Vendor</span> <span class="n">Buyer</span>
+<span class="n">A</span>      <span class="n">BU1</span>        <span class="mi">1</span>                 <span class="mi">1</span>
+       <span class="n">BU2</span>        <span class="mi">2</span>                <span class="mi">15</span>
+<span class="n">B</span>      <span class="n">BU2</span>        <span class="mi">2</span>                <span class="mi">60</span>
+<span class="k">C</span>      <span class="n">BU1</span>        <span class="mi">1</span>               <span class="mi">103</span>
+       <span class="n">BU2</span>        <span class="mi">3</span>               <span class="mi">262</span>
+<span class="n">D</span>      <span class="n">BU1</span>        <span class="mi">1</span>                <span class="mi">30</span>
+       <span class="n">BU2</span>        <span class="mi">1</span>                <span class="mi">23</span>
+<span class="n">E</span>      <span class="n">BU1</span>        <span class="mi">2</span>               <span class="mi">179</span>
+       <span class="n">BU2</span>        <span class="mi">3</span>               <span class="mi">171</span>
+</pre></div>
+
+
+<p>Reset</p>
+<div class="highlight"><pre><span></span><span class="o">&gt;&gt;</span> <span class="n">agg_df_2</span> <span class="o">=</span> <span class="n">agg_df</span><span class="p">.</span><span class="n">reset_index</span><span class="p">()</span>
+
+<span class="o">&gt;&gt;</span> <span class="n">agg_df_2</span>
+
+    <span class="n">Vendor</span> <span class="n">Buyer</span>  <span class="k">Count</span>  <span class="n">Total</span> <span class="n">Amount</span> <span class="p">(</span><span class="err">$</span><span class="p">)</span>
+<span class="mi">0</span>      <span class="n">A</span>   <span class="n">BU1</span>      <span class="mi">1</span>                 <span class="mi">1</span>
+<span class="mi">1</span>      <span class="n">A</span>   <span class="n">BU2</span>      <span class="mi">2</span>                <span class="mi">15</span>
+<span class="mi">2</span>      <span class="n">B</span>   <span class="n">BU2</span>      <span class="mi">2</span>                <span class="mi">60</span>
+<span class="mi">3</span>      <span class="k">C</span>   <span class="n">BU1</span>      <span class="mi">1</span>               <span class="mi">103</span>
+<span class="mi">4</span>      <span class="k">C</span>   <span class="n">BU2</span>      <span class="mi">3</span>               <span class="mi">262</span>
+<span class="mi">5</span>      <span class="n">D</span>   <span class="n">BU1</span>      <span class="mi">1</span>                <span class="mi">30</span>
+<span class="mi">6</span>      <span class="n">D</span>   <span class="n">BU2</span>      <span class="mi">1</span>                <span class="mi">23</span>
+<span class="mi">7</span>      <span class="n">E</span>   <span class="n">BU1</span>      <span class="mi">2</span>               <span class="mi">179</span>
+<span class="mi">8</span>      <span class="n">E</span>   <span class="n">BU2</span>      <span class="mi">3</span>               <span class="mi">171</span>
+
+<span class="o">&gt;&gt;</span> <span class="n">agg_df_3</span> <span class="o">=</span> <span class="n">agg_df_2</span><span class="p">.</span><span class="n">sort_values</span><span class="p">([</span><span class="s1">&#39;Buyer&#39;</span><span class="p">,</span> <span class="s1">&#39;Vendor&#39;</span><span class="p">])</span>
+
+<span class="o">&gt;&gt;</span> <span class="n">agg_df_3</span>
+
+    <span class="n">Vendor</span> <span class="n">Buyer</span>  <span class="k">Count</span>  <span class="n">Total</span> <span class="n">Amount</span> <span class="p">(</span><span class="err">$</span><span class="p">)</span>
+<span class="mi">0</span>      <span class="n">A</span>   <span class="n">BU1</span>      <span class="mi">1</span>                 <span class="mi">1</span>
+<span class="mi">3</span>      <span class="k">C</span>   <span class="n">BU1</span>      <span class="mi">1</span>               <span class="mi">103</span>
+<span class="mi">5</span>      <span class="n">D</span>   <span class="n">BU1</span>      <span class="mi">1</span>                <span class="mi">30</span>
+<span class="mi">7</span>      <span class="n">E</span>   <span class="n">BU1</span>      <span class="mi">2</span>               <span class="mi">179</span>
+<span class="mi">1</span>      <span class="n">A</span>   <span class="n">BU2</span>      <span class="mi">2</span>                <span class="mi">15</span>
+<span class="mi">2</span>      <span class="n">B</span>   <span class="n">BU2</span>      <span class="mi">2</span>                <span class="mi">60</span>
+<span class="mi">4</span>      <span class="k">C</span>   <span class="n">BU2</span>      <span class="mi">3</span>               <span class="mi">262</span>
+<span class="mi">6</span>      <span class="n">D</span>   <span class="n">BU2</span>      <span class="mi">1</span>                <span class="mi">23</span>
+<span class="mi">8</span>      <span class="n">E</span>   <span class="n">BU2</span>      <span class="mi">3</span>               <span class="mi">171</span>
+</pre></div>
+
+
+<p><strong>DataFrame.melt</strong> unpivots a DataFrame into a format where one or more columns are identifier variables (id_vars), while all other columns, considered measured variables (value_vars), are "unpivoted" to the row axis. This leaves two non-identifier columns, 'variable' and 'value', where 'variable' contains the measured variables and 'value' contains the values corresponding to the measured variables.</p>
+<div class="highlight"><pre><span></span><span class="o">&gt;&gt;</span> <span class="n">df_melt</span> <span class="o">=</span> <span class="n">agg_df_3</span><span class="p">.</span><span class="n">melt</span><span class="p">(</span>
+        <span class="n">id_vars</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;Vendor&#39;</span><span class="p">,</span> <span class="s1">&#39;Buyer&#39;</span><span class="p">],</span>
+        <span class="n">value_vars</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;Count&#39;</span><span class="p">,</span> <span class="s1">&#39;Total Amount ($)&#39;</span><span class="p">]</span>
         <span class="p">)</span>
 
-<span class="n">df_melt</span>
+<span class="o">&gt;&gt;</span> <span class="n">df_melt</span>
 
-<span class="n">df_multiindex</span> <span class="o">=</span> <span class="n">df_melt</span><span class="p">.</span><span class="n">set_index</span><span class="p">(</span>
-                    <span class="p">[</span><span class="n">column_level0_agg</span><span class="p">,</span> <span class="n">column_level1_agg</span><span class="p">,</span> <span class="s1">&#39;variable&#39;</span><span class="p">]</span>
+    <span class="n">Vendor</span> <span class="n">Buyer</span>          <span class="k">variable</span>  <span class="n">value</span>
+<span class="mi">0</span>       <span class="n">A</span>   <span class="n">BU1</span>             <span class="k">Count</span>      <span class="mi">1</span>
+<span class="mi">1</span>       <span class="k">C</span>   <span class="n">BU1</span>             <span class="k">Count</span>      <span class="mi">1</span>
+<span class="mi">2</span>       <span class="n">D</span>   <span class="n">BU1</span>             <span class="k">Count</span>      <span class="mi">1</span>
+<span class="mi">3</span>       <span class="n">E</span>   <span class="n">BU1</span>             <span class="k">Count</span>      <span class="mi">2</span>
+<span class="mi">4</span>       <span class="n">A</span>   <span class="n">BU2</span>             <span class="k">Count</span>      <span class="mi">2</span>
+<span class="mi">5</span>       <span class="n">B</span>   <span class="n">BU2</span>             <span class="k">Count</span>      <span class="mi">2</span>
+<span class="mi">6</span>       <span class="k">C</span>   <span class="n">BU2</span>             <span class="k">Count</span>      <span class="mi">3</span>
+<span class="mi">7</span>       <span class="n">D</span>   <span class="n">BU2</span>             <span class="k">Count</span>      <span class="mi">1</span>
+<span class="mi">8</span>       <span class="n">E</span>   <span class="n">BU2</span>             <span class="k">Count</span>      <span class="mi">3</span>
+<span class="mi">9</span>       <span class="n">A</span>   <span class="n">BU1</span>  <span class="n">Total</span> <span class="n">Amount</span> <span class="p">(</span><span class="err">$</span><span class="p">)</span>      <span class="mi">1</span>
+<span class="mi">10</span>      <span class="k">C</span>   <span class="n">BU1</span>  <span class="n">Total</span> <span class="n">Amount</span> <span class="p">(</span><span class="err">$</span><span class="p">)</span>    <span class="mi">103</span>
+<span class="mi">11</span>      <span class="n">D</span>   <span class="n">BU1</span>  <span class="n">Total</span> <span class="n">Amount</span> <span class="p">(</span><span class="err">$</span><span class="p">)</span>     <span class="mi">30</span>
+<span class="mi">12</span>      <span class="n">E</span>   <span class="n">BU1</span>  <span class="n">Total</span> <span class="n">Amount</span> <span class="p">(</span><span class="err">$</span><span class="p">)</span>    <span class="mi">179</span>
+<span class="mi">13</span>      <span class="n">A</span>   <span class="n">BU2</span>  <span class="n">Total</span> <span class="n">Amount</span> <span class="p">(</span><span class="err">$</span><span class="p">)</span>     <span class="mi">15</span>
+<span class="mi">14</span>      <span class="n">B</span>   <span class="n">BU2</span>  <span class="n">Total</span> <span class="n">Amount</span> <span class="p">(</span><span class="err">$</span><span class="p">)</span>     <span class="mi">60</span>
+<span class="mi">15</span>      <span class="k">C</span>   <span class="n">BU2</span>  <span class="n">Total</span> <span class="n">Amount</span> <span class="p">(</span><span class="err">$</span><span class="p">)</span>    <span class="mi">262</span>
+<span class="mi">16</span>      <span class="n">D</span>   <span class="n">BU2</span>  <span class="n">Total</span> <span class="n">Amount</span> <span class="p">(</span><span class="err">$</span><span class="p">)</span>     <span class="mi">23</span>
+<span class="mi">17</span>      <span class="n">E</span>   <span class="n">BU2</span>  <span class="n">Total</span> <span class="n">Amount</span> <span class="p">(</span><span class="err">$</span><span class="p">)</span>    <span class="mi">171</span>
+
+<span class="o">&gt;&gt;</span> <span class="n">df_multiindex</span> <span class="o">=</span> <span class="n">df_melt</span><span class="p">.</span><span class="n">set_index</span><span class="p">(</span>
+                    <span class="p">[</span><span class="s1">&#39;Vendor&#39;</span><span class="p">,</span> <span class="s1">&#39;Buyer&#39;</span><span class="p">,</span> <span class="s1">&#39;variable&#39;</span><span class="p">]</span>
                     <span class="p">)</span>
 
-<span class="n">df_multiindex</span>
+<span class="o">&gt;&gt;</span> <span class="n">df_multiindex</span>
 
-<span class="n">df_unstack</span> <span class="o">=</span> <span class="n">df_multiindex</span><span class="p">.</span><span class="n">unstack</span><span class="p">(</span><span class="k">level</span><span class="o">=-</span><span class="mi">2</span><span class="p">)</span>
+                                <span class="n">value</span>
+<span class="n">Vendor</span> <span class="n">Buyer</span> <span class="k">variable</span>
+<span class="n">A</span>      <span class="n">BU1</span>   <span class="k">Count</span>                 <span class="mi">1</span>
+<span class="k">C</span>      <span class="n">BU1</span>   <span class="k">Count</span>                 <span class="mi">1</span>
+<span class="n">D</span>      <span class="n">BU1</span>   <span class="k">Count</span>                 <span class="mi">1</span>
+<span class="n">E</span>      <span class="n">BU1</span>   <span class="k">Count</span>                 <span class="mi">2</span>
+<span class="n">A</span>      <span class="n">BU2</span>   <span class="k">Count</span>                 <span class="mi">2</span>
+<span class="n">B</span>      <span class="n">BU2</span>   <span class="k">Count</span>                 <span class="mi">2</span>
+<span class="k">C</span>      <span class="n">BU2</span>   <span class="k">Count</span>                 <span class="mi">3</span>
+<span class="n">D</span>      <span class="n">BU2</span>   <span class="k">Count</span>                 <span class="mi">1</span>
+<span class="n">E</span>      <span class="n">BU2</span>   <span class="k">Count</span>                 <span class="mi">3</span>
+<span class="n">A</span>      <span class="n">BU1</span>   <span class="n">Total</span> <span class="n">Amount</span> <span class="p">(</span><span class="err">$</span><span class="p">)</span>      <span class="mi">1</span>
+<span class="k">C</span>      <span class="n">BU1</span>   <span class="n">Total</span> <span class="n">Amount</span> <span class="p">(</span><span class="err">$</span><span class="p">)</span>    <span class="mi">103</span>
+<span class="n">D</span>      <span class="n">BU1</span>   <span class="n">Total</span> <span class="n">Amount</span> <span class="p">(</span><span class="err">$</span><span class="p">)</span>     <span class="mi">30</span>
+<span class="n">E</span>      <span class="n">BU1</span>   <span class="n">Total</span> <span class="n">Amount</span> <span class="p">(</span><span class="err">$</span><span class="p">)</span>    <span class="mi">179</span>
+<span class="n">A</span>      <span class="n">BU2</span>   <span class="n">Total</span> <span class="n">Amount</span> <span class="p">(</span><span class="err">$</span><span class="p">)</span>     <span class="mi">15</span>
+<span class="n">B</span>      <span class="n">BU2</span>   <span class="n">Total</span> <span class="n">Amount</span> <span class="p">(</span><span class="err">$</span><span class="p">)</span>     <span class="mi">60</span>
+<span class="k">C</span>      <span class="n">BU2</span>   <span class="n">Total</span> <span class="n">Amount</span> <span class="p">(</span><span class="err">$</span><span class="p">)</span>    <span class="mi">262</span>
+<span class="n">D</span>      <span class="n">BU2</span>   <span class="n">Total</span> <span class="n">Amount</span> <span class="p">(</span><span class="err">$</span><span class="p">)</span>     <span class="mi">23</span>
+<span class="n">E</span>      <span class="n">BU2</span>   <span class="n">Total</span> <span class="n">Amount</span> <span class="p">(</span><span class="err">$</span><span class="p">)</span>    <span class="mi">171</span>
 
-<span class="n">df_unstack</span><span class="p">[</span><span class="s1">&#39;Total&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">df_unstack</span><span class="p">.</span><span class="k">sum</span><span class="p">(</span><span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+<span class="o">&gt;&gt;</span> <span class="n">df_multiindex</span><span class="p">.</span><span class="n">unstack</span><span class="p">(</span><span class="k">level</span><span class="o">=-</span><span class="mi">2</span><span class="p">)</span>
 
-<span class="n">df_unstack</span>
+                             <span class="n">value</span>
+<span class="n">Buyer</span>                      <span class="n">BU1</span>    <span class="n">BU2</span>
+<span class="n">Vendor</span> <span class="k">variable</span>
+<span class="n">A</span>      <span class="k">Count</span>               <span class="mi">1</span><span class="p">.</span><span class="mi">0</span>    <span class="mi">2</span><span class="p">.</span><span class="mi">0</span>
+       <span class="n">Total</span> <span class="n">Amount</span> <span class="p">(</span><span class="err">$</span><span class="p">)</span>    <span class="mi">1</span><span class="p">.</span><span class="mi">0</span>   <span class="mi">15</span><span class="p">.</span><span class="mi">0</span>
+<span class="n">B</span>      <span class="k">Count</span>               <span class="n">NaN</span>    <span class="mi">2</span><span class="p">.</span><span class="mi">0</span>
+       <span class="n">Total</span> <span class="n">Amount</span> <span class="p">(</span><span class="err">$</span><span class="p">)</span>    <span class="n">NaN</span>   <span class="mi">60</span><span class="p">.</span><span class="mi">0</span>
+<span class="k">C</span>      <span class="k">Count</span>               <span class="mi">1</span><span class="p">.</span><span class="mi">0</span>    <span class="mi">3</span><span class="p">.</span><span class="mi">0</span>
+       <span class="n">Total</span> <span class="n">Amount</span> <span class="p">(</span><span class="err">$</span><span class="p">)</span>  <span class="mi">103</span><span class="p">.</span><span class="mi">0</span>  <span class="mi">262</span><span class="p">.</span><span class="mi">0</span>
+<span class="n">D</span>      <span class="k">Count</span>               <span class="mi">1</span><span class="p">.</span><span class="mi">0</span>    <span class="mi">1</span><span class="p">.</span><span class="mi">0</span>
+       <span class="n">Total</span> <span class="n">Amount</span> <span class="p">(</span><span class="err">$</span><span class="p">)</span>   <span class="mi">30</span><span class="p">.</span><span class="mi">0</span>   <span class="mi">23</span><span class="p">.</span><span class="mi">0</span>
+<span class="n">E</span>      <span class="k">Count</span>               <span class="mi">2</span><span class="p">.</span><span class="mi">0</span>    <span class="mi">3</span><span class="p">.</span><span class="mi">0</span>
+       <span class="n">Total</span> <span class="n">Amount</span> <span class="p">(</span><span class="err">$</span><span class="p">)</span>  <span class="mi">179</span><span class="p">.</span><span class="mi">0</span>  <span class="mi">171</span><span class="p">.</span><span class="mi">0</span>
+
+<span class="o">&gt;&gt;&gt;</span> <span class="n">df_multiindex</span><span class="p">.</span><span class="n">unstack</span><span class="p">(</span><span class="k">level</span><span class="o">=-</span><span class="mi">1</span><span class="p">)</span>
+
+                 <span class="n">value</span>
+<span class="k">variable</span>     <span class="k">Count</span> <span class="n">Total</span> <span class="n">Amount</span> <span class="p">(</span><span class="err">$</span><span class="p">)</span>
+<span class="n">Vendor</span> <span class="n">Buyer</span>
+<span class="n">A</span>      <span class="n">BU1</span>       <span class="mi">1</span>                <span class="mi">1</span>
+       <span class="n">BU2</span>       <span class="mi">2</span>               <span class="mi">15</span>
+<span class="n">B</span>      <span class="n">BU2</span>       <span class="mi">2</span>               <span class="mi">60</span>
+<span class="k">C</span>      <span class="n">BU1</span>       <span class="mi">1</span>              <span class="mi">103</span>
+       <span class="n">BU2</span>       <span class="mi">3</span>              <span class="mi">262</span>
+<span class="n">D</span>      <span class="n">BU1</span>       <span class="mi">1</span>               <span class="mi">30</span>
+       <span class="n">BU2</span>       <span class="mi">1</span>               <span class="mi">23</span>
+<span class="n">E</span>      <span class="n">BU1</span>       <span class="mi">2</span>              <span class="mi">179</span>
+       <span class="n">BU2</span>       <span class="mi">3</span>              <span class="mi">171</span>
+
+<span class="o">&gt;&gt;&gt;</span> <span class="n">df_multiindex</span><span class="p">.</span><span class="n">unstack</span><span class="p">(</span><span class="k">level</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+
+                       <span class="n">value</span>
+<span class="n">Vendor</span>                     <span class="n">A</span>     <span class="n">B</span>      <span class="k">C</span>     <span class="n">D</span>      <span class="n">E</span>
+<span class="n">Buyer</span> <span class="k">variable</span>
+<span class="n">BU1</span>   <span class="k">Count</span>              <span class="mi">1</span><span class="p">.</span><span class="mi">0</span>   <span class="n">NaN</span>    <span class="mi">1</span><span class="p">.</span><span class="mi">0</span>   <span class="mi">1</span><span class="p">.</span><span class="mi">0</span>    <span class="mi">2</span><span class="p">.</span><span class="mi">0</span>
+      <span class="n">Total</span> <span class="n">Amount</span> <span class="p">(</span><span class="err">$</span><span class="p">)</span>   <span class="mi">1</span><span class="p">.</span><span class="mi">0</span>   <span class="n">NaN</span>  <span class="mi">103</span><span class="p">.</span><span class="mi">0</span>  <span class="mi">30</span><span class="p">.</span><span class="mi">0</span>  <span class="mi">179</span><span class="p">.</span><span class="mi">0</span>
+<span class="n">BU2</span>   <span class="k">Count</span>              <span class="mi">2</span><span class="p">.</span><span class="mi">0</span>   <span class="mi">2</span><span class="p">.</span><span class="mi">0</span>    <span class="mi">3</span><span class="p">.</span><span class="mi">0</span>   <span class="mi">1</span><span class="p">.</span><span class="mi">0</span>    <span class="mi">3</span><span class="p">.</span><span class="mi">0</span>
+      <span class="n">Total</span> <span class="n">Amount</span> <span class="p">(</span><span class="err">$</span><span class="p">)</span>  <span class="mi">15</span><span class="p">.</span><span class="mi">0</span>  <span class="mi">60</span><span class="p">.</span><span class="mi">0</span>  <span class="mi">262</span><span class="p">.</span><span class="mi">0</span>  <span class="mi">23</span><span class="p">.</span><span class="mi">0</span>  <span class="mi">171</span><span class="p">.</span><span class="mi">0</span>
+
+<span class="o">&gt;&gt;</span> <span class="n">df_unstack</span> <span class="o">=</span> <span class="n">df_multiindex</span><span class="p">.</span><span class="n">unstack</span><span class="p">(</span><span class="k">level</span><span class="o">=-</span><span class="mi">2</span><span class="p">)</span>
+
+<span class="o">&gt;&gt;</span> <span class="n">df_unstack</span><span class="p">[</span><span class="s1">&#39;Total&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">df_unstack</span><span class="p">.</span><span class="k">sum</span><span class="p">(</span><span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+
+<span class="o">&gt;&gt;&gt;</span> <span class="n">df_unstack</span>
+                         <span class="n">value</span>         <span class="n">Total</span>
+<span class="n">Buyer</span>                      <span class="n">BU1</span>    <span class="n">BU2</span>
+<span class="n">Vendor</span> <span class="k">variable</span>
+<span class="n">A</span>      <span class="k">Count</span>               <span class="mi">1</span><span class="p">.</span><span class="mi">0</span>    <span class="mi">2</span><span class="p">.</span><span class="mi">0</span>    <span class="mi">3</span><span class="p">.</span><span class="mi">0</span>
+       <span class="n">Total</span> <span class="n">Amount</span> <span class="p">(</span><span class="err">$</span><span class="p">)</span>    <span class="mi">1</span><span class="p">.</span><span class="mi">0</span>   <span class="mi">15</span><span class="p">.</span><span class="mi">0</span>   <span class="mi">16</span><span class="p">.</span><span class="mi">0</span>
+<span class="n">B</span>      <span class="k">Count</span>               <span class="n">NaN</span>    <span class="mi">2</span><span class="p">.</span><span class="mi">0</span>    <span class="mi">2</span><span class="p">.</span><span class="mi">0</span>
+       <span class="n">Total</span> <span class="n">Amount</span> <span class="p">(</span><span class="err">$</span><span class="p">)</span>    <span class="n">NaN</span>   <span class="mi">60</span><span class="p">.</span><span class="mi">0</span>   <span class="mi">60</span><span class="p">.</span><span class="mi">0</span>
+<span class="k">C</span>      <span class="k">Count</span>               <span class="mi">1</span><span class="p">.</span><span class="mi">0</span>    <span class="mi">3</span><span class="p">.</span><span class="mi">0</span>    <span class="mi">4</span><span class="p">.</span><span class="mi">0</span>
+       <span class="n">Total</span> <span class="n">Amount</span> <span class="p">(</span><span class="err">$</span><span class="p">)</span>  <span class="mi">103</span><span class="p">.</span><span class="mi">0</span>  <span class="mi">262</span><span class="p">.</span><span class="mi">0</span>  <span class="mi">365</span><span class="p">.</span><span class="mi">0</span>
+<span class="n">D</span>      <span class="k">Count</span>               <span class="mi">1</span><span class="p">.</span><span class="mi">0</span>    <span class="mi">1</span><span class="p">.</span><span class="mi">0</span>    <span class="mi">2</span><span class="p">.</span><span class="mi">0</span>
+       <span class="n">Total</span> <span class="n">Amount</span> <span class="p">(</span><span class="err">$</span><span class="p">)</span>   <span class="mi">30</span><span class="p">.</span><span class="mi">0</span>   <span class="mi">23</span><span class="p">.</span><span class="mi">0</span>   <span class="mi">53</span><span class="p">.</span><span class="mi">0</span>
+<span class="n">E</span>      <span class="k">Count</span>               <span class="mi">2</span><span class="p">.</span><span class="mi">0</span>    <span class="mi">3</span><span class="p">.</span><span class="mi">0</span>    <span class="mi">5</span><span class="p">.</span><span class="mi">0</span>
+       <span class="n">Total</span> <span class="n">Amount</span> <span class="p">(</span><span class="err">$</span><span class="p">)</span>  <span class="mi">179</span><span class="p">.</span><span class="mi">0</span>  <span class="mi">171</span><span class="p">.</span><span class="mi">0</span>  <span class="mi">350</span><span class="p">.</span><span class="mi">0</span>
 </pre></div>
     </div><!-- /.entry-content -->
 

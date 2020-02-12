@@ -40,15 +40,66 @@
 <li>For third column onwards, color cells using two different colors based on two levels of upper-bound/lower-bound conditions</li>
 </ol>
 <h2>What I did</h2>
-<h3>Step 1: Generate data table in Plotly</h3>
-<p>Due to limitations in displaying MultiIndex DataFrames in Plotly, the original MultiIndex DataFrame has to be manipulated in a way that allows Plotly to read the cell values in the DataFrame</p>
-<h3>Step 1: Create backend table for metric used in the conditions</h3>
+<h3>Step 1: Transform Pandas MultiIndex DataFrame to Plotly-compatible Table format</h3>
+<p>According to the <a href="https://plot.ly/python/table/">documentation for Tables in Python with Plotly</a>, the data are arranged in a grid of rows and columns and the grid is represented as a vector of column vectors (which is known as a column-major order). Due to limitations in displaying MultiIndex DataFrames in Table format with Plotly, the original MultiIndex DataFrame has to be manipulated in a way that allows Plotly to read the header and cell values in the DataFrame.</p>
+<p>When cell values for a Table object is defined in the following manner:</p>
+<p>:::python</p>
+<div class="highlight"><pre><span></span><span class="n">fig</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">go</span><span class="p">.</span><span class="n">Figure</span><span class="p">(</span><span class="k">data</span><span class="o">=[</span><span class="n">go.Table(</span>
+<span class="n">    header=dict(</span>
+<span class="n">        values=[&#39;A Scores&#39;, &#39;B Scores&#39;</span><span class="o">]</span><span class="p">),</span><span class="w"></span>
+<span class="w">    </span><span class="n">cells</span><span class="o">=</span><span class="n">dict</span><span class="p">(</span><span class="w"></span>
+<span class="w">        </span><span class="k">values</span><span class="o">=[</span><span class="n">[100, 90, 80, 90</span><span class="o">]</span><span class="p">,</span><span class="w"> </span><span class="o">[</span><span class="n">95, 85, 75, 95</span><span class="o">]</span><span class="err">]</span><span class="p">))</span><span class="w"></span>
+<span class="w">    </span><span class="err">]</span><span class="p">)</span><span class="w"></span>
+
+<span class="n">fig</span><span class="p">.</span><span class="n">show</span><span class="p">()</span><span class="w"></span>
+</pre></div>
+
+
+<p>the Table object would be displayed column-wise in the following manner:</p>
+<div class="highlight"><pre><span></span><span class="p">|</span>  <span class="nv">A</span> <span class="nv">Scores</span>   <span class="p">|</span>  <span class="nv">B</span> <span class="nv">Scores</span>   <span class="p">|</span>
+<span class="p">|:-</span><span class="s s-Atom">----------:</span><span class="p">|:-</span><span class="s s-Atom">----------:</span><span class="p">|</span>
+<span class="p">|</span>     <span class="mi">100</span>     <span class="p">|</span>     <span class="mi">95</span>      <span class="p">|</span>
+<span class="p">|</span>     <span class="mi">90</span>      <span class="p">|</span>     <span class="mi">85</span>      <span class="p">|</span>
+<span class="p">|</span>     <span class="mi">80</span>      <span class="p">|</span>     <span class="mi">75</span>      <span class="p">|</span>
+<span class="p">|</span>     <span class="mi">90</span>      <span class="p">|</span>     <span class="mi">95</span>      <span class="p">|</span>
+</pre></div>
+
+
+<p>Column-major order also applies for header values, as illustrated by the example below:</p>
+<p>:::python</p>
+<div class="highlight"><pre><span></span><span class="n">fig</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">go</span><span class="p">.</span><span class="n">Figure</span><span class="p">(</span><span class="k">data</span><span class="o">=[</span><span class="n">go.Table(</span>
+<span class="n">    header=dict(</span>
+<span class="n">        values=[[&#39;Scores&#39;, &#39;A&#39;</span><span class="o">]</span><span class="p">,</span><span class="w"> </span><span class="o">[</span><span class="n">&#39;Scores&#39;,&#39;B&#39;</span><span class="o">]</span><span class="err">]</span><span class="p">),</span><span class="w"></span>
+<span class="w">    </span><span class="n">cells</span><span class="o">=</span><span class="n">dict</span><span class="p">(</span><span class="w"></span>
+<span class="w">        </span><span class="k">values</span><span class="o">=[</span><span class="n">[100, 90, 80, 90</span><span class="o">]</span><span class="p">,</span><span class="w"> </span><span class="o">[</span><span class="n">95, 85, 75, 95</span><span class="o">]</span><span class="err">]</span><span class="p">))</span><span class="w"></span>
+<span class="w">    </span><span class="err">]</span><span class="p">)</span><span class="w"></span>
+
+<span class="n">fig</span><span class="p">.</span><span class="n">show</span><span class="p">()</span><span class="w"></span>
+</pre></div>
+
+
+<p>The Table object generated from the code snippet above would be displayed in the following manner:</p>
+<div class="highlight"><pre><span></span><span class="p">|</span>   <span class="nv">Scores</span>    <span class="p">|</span>   <span class="nv">Scores</span>    <span class="p">|</span>
+<span class="p">|:-</span><span class="s s-Atom">----------:</span><span class="p">|:-</span><span class="s s-Atom">----------:</span><span class="p">|</span>
+<span class="p">|</span>      <span class="nv">A</span>      <span class="p">|</span>      <span class="nv">B</span>      <span class="p">|</span>
+<span class="p">|:-</span><span class="s s-Atom">----------:</span><span class="p">|:-</span><span class="s s-Atom">----------:</span><span class="p">|</span>
+<span class="p">|</span>     <span class="mi">100</span>     <span class="p">|</span>     <span class="mi">95</span>      <span class="p">|</span>
+<span class="p">|</span>     <span class="mi">90</span>      <span class="p">|</span>     <span class="mi">85</span>      <span class="p">|</span>
+<span class="p">|</span>     <span class="mi">80</span>      <span class="p">|</span>     <span class="mi">75</span>      <span class="p">|</span>
+<span class="p">|</span>     <span class="mi">90</span>      <span class="p">|</span>     <span class="mi">95</span>      <span class="p">|</span>
+</pre></div>
+
+
+<p>To represent the row levels in the MultiIndex, the row levels in the DataFrame are defined as a list of lists having the same length as the number of row levels in the DataFrame.</p>
+<p>Understanding how the header and cell values are defined column-wise in Tables with Plotly is important, as the same column-wise behavior is also used in defining the formatting of the Table header and cells.</p>
+<p>Let's go back to the table that </p>
+<h3>Step 2: Create backend table for metric used in the conditions</h3>
 <p>For example, I would like to use a ratio of two variables as one of the metrics for the upper-bound/lower-bound conditions. As the ratio is not explicitly displayed on the data table, I create a backend table to store the ratios.</p>
 <p>:::python</p>
 <div class="highlight"><pre><span></span><span class="n">def</span> <span class="n">pv_po_ratio_analysis</span><span class="p">(</span><span class="n">df_table</span><span class="p">,</span> <span class="n">column_level1_agg</span><span class="p">):</span>
 
     <span class="n">po_count_df</span> <span class="o">=</span> <span class="n">df_table</span><span class="p">[</span>
-                    <span class="n">df_table</span><span class="p">[</span><span class="s1">&#39;Item&#39;</span><span class="p">]</span> <span class="o">==</span> <span class="s1">&#39;PO Count&#39;</span>
+                    <span class="n">df_table</span><span class="p">[</span><span class="s1">&#39;Item&#39;</span><span class="p">]</span> <span class="o">==</span> <span class="s1">&#39;Count&#39;</span>
                     <span class="p">].</span><span class="n">set_index</span><span class="p">(</span>
                         <span class="p">[</span><span class="n">column_level1_agg</span><span class="p">,</span> <span class="s1">&#39;Item&#39;</span><span class="p">]</span>
                         <span class="p">).</span><span class="n">reset_index</span><span class="p">(</span><span class="s1">&#39;Item&#39;</span>
@@ -67,7 +118,7 @@
 </pre></div>
 
 
-<h3>Step 2: Define conditions for conditional formatting of cell colors</h3>
+<h3>Step 3: Define conditions for conditional formatting of cell colors</h3>
 <p>For this example, I would like to color cells using two different colors based on two levels of conditions:</p>
 <ol>
 <li>PO Count &gt;= T1</li>
@@ -76,7 +127,7 @@
 <p>Criteria no. 1 on PO Count needs to be fulfilled before traversing down to criteria 2 on PV/PO ratio.</p>
 <p>:::python</p>
 <div class="highlight"><pre><span></span><span class="n">po_count_df</span> <span class="o">=</span> <span class="n">df_table</span><span class="p">[</span>
-                <span class="n">df_table</span><span class="p">[</span><span class="s1">&#39;Item&#39;</span><span class="p">]</span> <span class="o">==</span> <span class="s1">&#39;PO Count&#39;</span>
+                <span class="n">df_table</span><span class="p">[</span><span class="s1">&#39;Item&#39;</span><span class="p">]</span> <span class="o">==</span> <span class="s1">&#39;Count&#39;</span>
                 <span class="p">].</span><span class="n">set_index</span><span class="p">(</span>
                     <span class="p">[</span><span class="n">column_level1_agg</span><span class="p">,</span> <span class="s1">&#39;Item&#39;</span><span class="p">]</span>
                     <span class="p">).</span><span class="n">reset_index</span><span class="p">(</span><span class="s1">&#39;Item&#39;</span>
@@ -98,31 +149,6 @@
 <span class="n">is_pv_po_ratio_lt_threshold1</span> <span class="o">=</span> <span class="n">pv_po_ratio_df</span><span class="p">.</span><span class="n">lt</span><span class="p">(</span><span class="mi">2000</span><span class="p">)</span>
 
 <span class="n">is_pv_po_ratio_gt_threshold2</span> <span class="o">=</span> <span class="n">pv_po_ratio_df</span><span class="p">.</span><span class="n">gt</span><span class="p">(</span><span class="mi">5000</span><span class="p">)</span>
-</pre></div>
-
-
-<h4>Step 3: Transform table to Plotly-compatible format</h4>
-<p>According to the <a href="https://plot.ly/python/table/">documentation for Tables in Python with Plotly</a>, the data are arranged in a grid of rows and columns and the grid is represented as a vector of column vectors (which is known as a column-major order).</p>
-<p>When cell values for a Table object is defined in the following manner:</p>
-<p>:::python</p>
-<div class="highlight"><pre><span></span><span class="n">fig</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">go</span><span class="p">.</span><span class="n">Figure</span><span class="p">(</span><span class="k">data</span><span class="o">=[</span><span class="n">go.Table(</span>
-<span class="n">    header=dict(</span>
-<span class="n">        values=[&#39;A Scores&#39;, &#39;B Scores&#39;</span><span class="o">]</span><span class="p">),</span><span class="w"></span>
-<span class="w">    </span><span class="n">cells</span><span class="o">=</span><span class="n">dict</span><span class="p">(</span><span class="w"></span>
-<span class="w">        </span><span class="k">values</span><span class="o">=[</span><span class="n">[100, 90, 80, 90</span><span class="o">]</span><span class="p">,</span><span class="w"> </span><span class="o">[</span><span class="n">95, 85, 75, 95</span><span class="o">]</span><span class="err">]</span><span class="p">))</span><span class="w"></span>
-<span class="w">    </span><span class="err">]</span><span class="p">)</span><span class="w"></span>
-
-<span class="n">fig</span><span class="p">.</span><span class="n">show</span><span class="p">()</span><span class="w"></span>
-</pre></div>
-
-
-<p>the Table object would be displayed column-wise in the following manner:</p>
-<div class="highlight"><pre><span></span><span class="p">|</span>  <span class="nv">A</span> <span class="nv">Scores</span>   <span class="p">|</span>  <span class="nv">B</span> <span class="nv">Scores</span>   <span class="p">|</span>
-<span class="p">|:-</span><span class="s s-Atom">----------:</span><span class="p">|:-</span><span class="s s-Atom">----------:</span><span class="p">|</span>
-<span class="p">|</span>     <span class="mi">100</span>     <span class="p">|</span>     <span class="mi">95</span>      <span class="p">|</span>
-<span class="p">|</span>     <span class="mi">90</span>      <span class="p">|</span>     <span class="mi">85</span>      <span class="p">|</span>
-<span class="p">|</span>     <span class="mi">80</span>      <span class="p">|</span>     <span class="mi">75</span>      <span class="p">|</span>
-<span class="p">|</span>     <span class="mi">90</span>      <span class="p">|</span>     <span class="mi">95</span>      <span class="p">|</span>
 </pre></div>
     </div><!-- /.entry-content -->
 
