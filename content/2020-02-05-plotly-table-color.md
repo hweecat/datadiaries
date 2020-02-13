@@ -65,9 +65,52 @@ The Table object generated from the code snippet above would be displayed in the
 
 To represent the row levels in the MultiIndex, the row levels in the DataFrame are defined as a list of lists having the same length as the number of row levels in the DataFrame.
 
-Understanding how the header and cell values are defined column-wise in Tables with Plotly is important, as the same column-wise behavior is also used in defining the formatting of the Table header and cells.
+Understanding how the header and cell values are defined in column-major order in Tables with Plotly is important, as the same column-major order is also used in specifying the styling for header and individual cells.
 
-Let's go back to the table that 
+Let's go back to the table that was created in the previous note:
+
+:::python
+
+    >> df_unstack
+
+                               value         Total
+    Buyer                      BU1    BU2
+    Vendor variable
+    A      Count               1.0    2.0    3.0
+           Total Amount ($)    1.0   15.0   16.0
+    B      Count               NaN    2.0    2.0
+           Total Amount ($)    NaN   60.0   60.0
+    C      Count               1.0    3.0    4.0
+           Total Amount ($)  103.0  262.0  365.0
+    D      Count               1.0    1.0    2.0
+           Total Amount ($)   30.0   23.0   53.0
+    E      Count               2.0    3.0    5.0
+           Total Amount ($)  179.0  171.0  350.0
+
+The DataFrame has the following indexing properties: 2 levels of column indices and 2 levels of row indices.
+
+:::python
+    >> df_unstack.columns
+
+    MultiIndex([('value', 'BU1'),
+            ('value', 'BU2')],
+           names=[None, 'Buyer'])
+
+    >> df_unstack.index
+
+    MultiIndex([('A',            'Count'),
+                ('A', 'Total Amount ($)'),
+                ('B',            'Count'),
+                ('B', 'Total Amount ($)'),
+                ('C',            'Count'),
+                ('C', 'Total Amount ($)'),
+                ('D',            'Count'),
+                ('D', 'Total Amount ($)'),
+                ('E',            'Count'),
+                ('E', 'Total Amount ($)')],
+               names=['Vendor', 'variable'])
+
+
 
 ### Step 2: Create backend table for metric used in the conditions
 
