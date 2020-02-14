@@ -65,7 +65,7 @@ First, compute the aggregate values (Count, Total Amount ($)) for Vendor-Buyer c
     E      BU1        2               179
            BU2        3               171
 
-Reset
+Reset index of DataFrame in order to sort the data by Buyer and Vendor using **sort_values**.
 
     >> agg_df_2 = agg_df.reset_index()
     
@@ -97,7 +97,7 @@ Reset
     6      D   BU2      1                23
     8      E   BU2      3               171
 
-**DataFrame.melt** unpivots a DataFrame into a format where one or more columns are identifier variables (id_vars), while all other columns, considered measured variables (value_vars), are "unpivoted" to the row axis. This leaves two non-identifier columns, 'variable' and 'value', where 'variable' contains the measured variables and 'value' contains the values corresponding to the measured variables.
+**DataFrame.melt** "unpivots" a DataFrame into a format where one or more columns are identifier variables (id_vars), while all other columns, considered measured variables (value_vars), are "unpivoted" to the row axis. This leaves two non-identifier columns, 'variable' and 'value', where 'variable' contains the measured variables and 'value' contains the values corresponding to the measured variables.
 
     >> df_melt = agg_df_3.melt(
             id_vars=['Vendor', 'Buyer'],
@@ -125,6 +125,8 @@ Reset
     15      C   BU2  Total Amount ($)    262
     16      D   BU2  Total Amount ($)     23
     17      E   BU2  Total Amount ($)    171
+
+**DataFrame.unstack** "pivots" a level of the hierarchial index labels to the column axis and returns a reshaped DataFrame with a new level of column labels, whose inner-most level consists of the pivoted index labels. This implies that a DataFrame which does not have indexing on the row axis will be "pivoted" to a Series.
 
     >> df_multiindex = df_melt.set_index(
                         ['Vendor', 'Buyer', 'variable']

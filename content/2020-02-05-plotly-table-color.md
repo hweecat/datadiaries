@@ -87,7 +87,9 @@ Let's go back to the table that was created in the previous note:
     E      Count               2.0    3.0    5.0
            Total Amount ($)  179.0  171.0  350.0
 
-The DataFrame has the following indexing properties: 2 levels of column indices and 2 levels of row indices.
+The DataFrame has the following hierarchial indexing properties: 2 levels of column indices and 2 levels of row indices.
+
+For the column indices:
 
 :::python
     >> df_unstack.columns
@@ -96,6 +98,9 @@ The DataFrame has the following indexing properties: 2 levels of column indices 
             ('value', 'BU2')],
            names=[None, 'Buyer'])
 
+For the row indices:
+
+:::python
     >> df_unstack.index
 
     MultiIndex([('A',            'Count'),
@@ -109,8 +114,6 @@ The DataFrame has the following indexing properties: 2 levels of column indices 
                 ('E',            'Count'),
                 ('E', 'Total Amount ($)')],
                names=['Vendor', 'variable'])
-
-
 
 ### Step 2: Create backend table for metric used in the conditions
 
