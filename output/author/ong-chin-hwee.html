@@ -61,7 +61,7 @@
 
 
 <h2>What I did</h2>
-<p>First, compute the aggregate values (Count, Total Amount ($)) for Vendor-Buyer combinations by using GroupBy aggregation (groupby().agg()):</p>
+<p>First, compute the aggregate values (Count, Total Amount ($)) for Vendor-Buyer combinations by using <strong>GroupBy aggregation (groupby().agg())</strong>:</p>
 <p>:::python</p>
 <div class="highlight"><pre><span></span><span class="o">&gt;&gt;</span> <span class="n">agg_df</span> <span class="o">=</span> <span class="err">\</span>
     <span class="n">df</span><span class="p">.</span><span class="n">groupby</span><span class="p">(</span>
@@ -239,7 +239,18 @@
        <span class="n">Total</span> <span class="n">Amount</span> <span class="p">(</span><span class="err">$</span><span class="p">)</span>   <span class="mi">30</span><span class="p">.</span><span class="mi">0</span>   <span class="mi">23</span><span class="p">.</span><span class="mi">0</span>   <span class="mi">53</span><span class="p">.</span><span class="mi">0</span>
 <span class="n">E</span>      <span class="k">Count</span>               <span class="mi">2</span><span class="p">.</span><span class="mi">0</span>    <span class="mi">3</span><span class="p">.</span><span class="mi">0</span>    <span class="mi">5</span><span class="p">.</span><span class="mi">0</span>
        <span class="n">Total</span> <span class="n">Amount</span> <span class="p">(</span><span class="err">$</span><span class="p">)</span>  <span class="mi">179</span><span class="p">.</span><span class="mi">0</span>  <span class="mi">171</span><span class="p">.</span><span class="mi">0</span>  <span class="mi">350</span><span class="p">.</span><span class="mi">0</span>
-</pre></div>                </article>
+</pre></div>
+
+
+<h2>References</h2>
+<ul>
+<li><a href="https://pandas.pydata.org/pandas-docs/stable/user_guide/groupby.html">Group By: split-apply-combine - pandas 1.0.1 documentation</a></li>
+<li><a href="https://pandas.pydata.org/pandas-docs/stable/user_guide/advanced.html">MultiIndex / advanced indexing - pandas 1.0.1 documentation</a></li>
+<li><a href="https://pandas.pydata.org/pandas-docs/stable/user_guide/reshaping.html">Reshaping and pivot tables - pandas 1.0.1 documentation</a></li>
+<li><a href="https://pandas.pydata.org/pandas-docs/stable/reference/api/pandas.DataFrame.sort_values.html">pandas.DataFrame.sort_values - pandas 1.0.1 documentation</a></li>
+<li><a href="https://pandas.pydata.org/pandas-docs/stable/reference/api/pandas.DataFrame.melt.html">pandas.DataFrame.melt - pandas 1.0.1 documentation</a></li>
+<li><a href="https://pandas.pydata.org/pandas-docs/stable/reference/api/pandas.DataFrame.unstack.html">pandas.DataFrame.unstack - pandas 1.0.1 documentation</a></li>
+</ul>                </article>
             </aside><!-- /#featured -->
                 <section id="content" class="body">
                     <h1>Other articles</h1>
