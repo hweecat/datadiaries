@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
         <meta charset="utf-8" />
-        <title>Today I Learnt - Data Engineering Diaries</title>
+        <title>Dataframe manipulation sequence - GroupBy Agg, Melt, Unstack</title>
         <link rel="stylesheet" href="https://datadiaries.commons.host/theme/css/main.css" />
 </head>
 
@@ -10,13 +10,18 @@
         <header id="banner" class="body">
                 <h1><a href="https://datadiaries.commons.host/">Today I Learnt - Data Engineering Diaries </a></h1>
                 <nav><ul>
-                    <li><a href="https://datadiaries.commons.host/category/pandas.html">Pandas</a></li>
+                    <li class="active"><a href="https://datadiaries.commons.host/category/pandas.html">Pandas</a></li>
                 </ul></nav>
         </header><!-- /#banner -->
+<section id="content" class="body">
+  <article>
+    <header>
+      <h1 class="entry-title">
+        <a href="https://datadiaries.commons.host/dataframe-manipulation-sequence-groupby-agg-melt-unstack.html" rel="bookmark"
+           title="Permalink to Dataframe manipulation sequence - GroupBy Agg, Melt, Unstack">Dataframe manipulation sequence - GroupBy Agg, Melt, Unstack</a></h1>
+    </header>
 
-            <aside id="featured" class="body">
-                <article>
-                    <h1 class="entry-title"><a href="https://datadiaries.commons.host/dataframe-manipulation-sequence-groupby-agg-melt-unstack.html">Dataframe manipulation sequence - GroupBy Agg, Melt, Unstack</a></h1>
+    <div class="entry-content">
 <footer class="post-info">
         <abbr class="published" title="2020-01-20T18:06:00+08:00">
                 Published: Mon 20 January 2020
@@ -27,7 +32,7 @@
         </address>
 <p>In <a href="https://datadiaries.commons.host/category/pandas.html">Pandas</a>.</p>
 
-</footer><!-- /.post-info --><h2>Problem</h2>
+</footer><!-- /.post-info -->      <h2>Problem</h2>
 <p>From a Pandas DataFrame, massage the DataFrame into a format where order Count and Total Amount could be determined for each Vendor and each Vendor-Buyer combination.</p>
 <p>:::python</p>
 <div class="highlight"><pre><span></span><span class="o">&gt;&gt;</span> <span class="n">df</span> <span class="o">=</span> <span class="n">pd</span><span class="p">.</span><span class="n">DataFrame</span><span class="p">(</span><span class="k">data</span><span class="o">=</span>
@@ -239,67 +244,11 @@
        <span class="n">Total</span> <span class="n">Amount</span> <span class="p">(</span><span class="err">$</span><span class="p">)</span>   <span class="mi">30</span><span class="p">.</span><span class="mi">0</span>   <span class="mi">23</span><span class="p">.</span><span class="mi">0</span>   <span class="mi">53</span><span class="p">.</span><span class="mi">0</span>
 <span class="n">E</span>      <span class="k">Count</span>               <span class="mi">2</span><span class="p">.</span><span class="mi">0</span>    <span class="mi">3</span><span class="p">.</span><span class="mi">0</span>    <span class="mi">5</span><span class="p">.</span><span class="mi">0</span>
        <span class="n">Total</span> <span class="n">Amount</span> <span class="p">(</span><span class="err">$</span><span class="p">)</span>  <span class="mi">179</span><span class="p">.</span><span class="mi">0</span>  <span class="mi">171</span><span class="p">.</span><span class="mi">0</span>  <span class="mi">350</span><span class="p">.</span><span class="mi">0</span>
-</pre></div>                </article>
-            </aside><!-- /#featured -->
-                <section id="content" class="body">
-                    <h1>Other articles</h1>
-                    <hr />
-                    <ol id="posts-list" class="hfeed">
+</pre></div>
+    </div><!-- /.entry-content -->
 
-            <li><article class="hentry">
-                <header>
-                    <h1><a href="https://datadiaries.commons.host/multiindexto_frame.html" rel="bookmark"
-                           title="Permalink to MultiIndex.to_frame()">MultiIndex.to_frame()</a></h1>
-                </header>
-
-                <div class="entry-content">
-<footer class="post-info">
-        <abbr class="published" title="2020-01-09T18:06:00+08:00">
-                Published: Thu 09 January 2020
-        </abbr>
-
-        <address class="vcard author">
-                By                         <a class="url fn" href="https://datadiaries.commons.host/author/ong-chin-hwee.html">Ong Chin Hwee</a>
-        </address>
-<p>In <a href="https://datadiaries.commons.host/category/pandas.html">Pandas</a>.</p>
-
-</footer><!-- /.post-info -->                <h2>Problem</h2>
-<p>From a MultiIndex dataframe, determine the total number of elements in the Buyer column for each Vendor.</p>
-<h2>What I did</h2>
-<p>Let's say we have the following DataFrame:</p>
-<p>:::python</p>
-<div class="highlight"><pre><span></span><span class="s s-Atom">&gt;&gt;</span> <span class="s s-Atom">df</span> <span class="o">=</span> <span class="s s-Atom">pd</span><span class="p">.</span><span class="nv">DataFrame</span><span class="p">(</span><span class="s s-Atom">data</span><span class="o">=</span>
-    <span class="p">{</span><span class="s s-Atom">&#39;Vendor&#39;:</span> <span class="p">[</span><span class="s s-Atom">&#39;A&#39;</span><span class="p">,</span> <span class="s s-Atom">&#39;A&#39;</span><span class="p">,</span> <span class="s s-Atom">&#39;B&#39;</span><span class="p">,</span> <span class="s s-Atom">&#39;C&#39;</span><span class="p">,</span> <span class="s s-Atom">&#39;C&#39;</span><span class="p">,</span> <span class="s s-Atom">&#39;C&#39;</span><span class="p">,</span>
-            <span class="s s-Atom">&#39;D&#39;</span><span class="p">,</span> <span class="s s-Atom">&#39;D&#39;</span><span class="p">,</span> <span class="s s-Atom">&#39;E&#39;</span><span class="p">,</span> <span class="s s-Atom">&#39;E&#39;</span><span class="p">,</span> <span class="s s-Atom">&#39;F&#39;</span><span class="p">,</span> <span class="s s-Atom">&#39;G&#39;</span><span class="p">,</span> <span class="s s-Atom">&#39;G&#39;</span><span class="p">],</span>      
-    <span class="s s-Atom">&#39;Buyer&#39;:</span><span class="p">[</span><span class="s s-Atom">&#39;BU1&#39;</span><span class="p">,</span> <span class="s s-Atom">&#39;BU3 …</span></pre></div>
-                <a class="readmore" href="https://datadiaries.commons.host/multiindexto_frame.html">read more</a>
-                </div><!-- /.entry-content -->
-            </article></li>
-
-            <li><article class="hentry">
-                <header>
-                    <h1><a href="https://datadiaries.commons.host/multiindexset_levels-in-pandas.html" rel="bookmark"
-                           title="Permalink to MultiIndex.set_levels() in pandas">MultiIndex.set_levels() in pandas</a></h1>
-                </header>
-
-                <div class="entry-content">
-<footer class="post-info">
-        <abbr class="published" title="2020-01-04T10:20:00+08:00">
-                Published: Sat 04 January 2020
-        </abbr>
-
-        <address class="vcard author">
-                By                         <a class="url fn" href="https://datadiaries.commons.host/author/ong-chin-hwee.html">Ong Chin Hwee</a>
-        </address>
-<p>In <a href="https://datadiaries.commons.host/category/pandas.html">Pandas</a>.</p>
-
-</footer><!-- /.post-info -->                <p>Problem:
-A user filed an issue on the pandas repo regarding MultiIndex.set_levels - and it turns out the user had some confusion between the set_levels method and the set_names method for MultiIndex due to the documentation. Hence, the MultiIndex.set_levels documentation was marked by the maintainers for improvements to clarify …</p>
-                <a class="readmore" href="https://datadiaries.commons.host/multiindexset_levels-in-pandas.html">read more</a>
-                </div><!-- /.entry-content -->
-            </article></li>
-                </ol><!-- /#posts-list -->
-                </section><!-- /#content -->
+  </article>
+</section>
         <section id="extras" class="body">
                 <div class="blogroll">
                         <h2>links</h2>

@@ -91,8 +91,54 @@
 
 
 <p>To represent the row levels in the MultiIndex, the row levels in the DataFrame are defined as a list of lists having the same length as the number of row levels in the DataFrame.</p>
-<p>Understanding how the header and cell values are defined column-wise in Tables with Plotly is important, as the same column-wise behavior is also used in defining the formatting of the Table header and cells.</p>
-<p>Let's go back to the table that </p>
+<p>Understanding how the header and cell values are defined in column-major order in Tables with Plotly is important, as the same column-major order is also used in specifying the styling for header and individual cells.</p>
+<p>Let's go back to the table that was created in the previous note:</p>
+<p>:::python</p>
+<div class="highlight"><pre><span></span><span class="o">&gt;&gt;</span> <span class="n">df_unstack</span>
+
+                           <span class="n">value</span>         <span class="n">Total</span>
+<span class="n">Buyer</span>                      <span class="n">BU1</span>    <span class="n">BU2</span>
+<span class="n">Vendor</span> <span class="k">variable</span>
+<span class="n">A</span>      <span class="k">Count</span>               <span class="mi">1</span><span class="p">.</span><span class="mi">0</span>    <span class="mi">2</span><span class="p">.</span><span class="mi">0</span>    <span class="mi">3</span><span class="p">.</span><span class="mi">0</span>
+       <span class="n">Total</span> <span class="n">Amount</span> <span class="p">(</span><span class="err">$</span><span class="p">)</span>    <span class="mi">1</span><span class="p">.</span><span class="mi">0</span>   <span class="mi">15</span><span class="p">.</span><span class="mi">0</span>   <span class="mi">16</span><span class="p">.</span><span class="mi">0</span>
+<span class="n">B</span>      <span class="k">Count</span>               <span class="n">NaN</span>    <span class="mi">2</span><span class="p">.</span><span class="mi">0</span>    <span class="mi">2</span><span class="p">.</span><span class="mi">0</span>
+       <span class="n">Total</span> <span class="n">Amount</span> <span class="p">(</span><span class="err">$</span><span class="p">)</span>    <span class="n">NaN</span>   <span class="mi">60</span><span class="p">.</span><span class="mi">0</span>   <span class="mi">60</span><span class="p">.</span><span class="mi">0</span>
+<span class="k">C</span>      <span class="k">Count</span>               <span class="mi">1</span><span class="p">.</span><span class="mi">0</span>    <span class="mi">3</span><span class="p">.</span><span class="mi">0</span>    <span class="mi">4</span><span class="p">.</span><span class="mi">0</span>
+       <span class="n">Total</span> <span class="n">Amount</span> <span class="p">(</span><span class="err">$</span><span class="p">)</span>  <span class="mi">103</span><span class="p">.</span><span class="mi">0</span>  <span class="mi">262</span><span class="p">.</span><span class="mi">0</span>  <span class="mi">365</span><span class="p">.</span><span class="mi">0</span>
+<span class="n">D</span>      <span class="k">Count</span>               <span class="mi">1</span><span class="p">.</span><span class="mi">0</span>    <span class="mi">1</span><span class="p">.</span><span class="mi">0</span>    <span class="mi">2</span><span class="p">.</span><span class="mi">0</span>
+       <span class="n">Total</span> <span class="n">Amount</span> <span class="p">(</span><span class="err">$</span><span class="p">)</span>   <span class="mi">30</span><span class="p">.</span><span class="mi">0</span>   <span class="mi">23</span><span class="p">.</span><span class="mi">0</span>   <span class="mi">53</span><span class="p">.</span><span class="mi">0</span>
+<span class="n">E</span>      <span class="k">Count</span>               <span class="mi">2</span><span class="p">.</span><span class="mi">0</span>    <span class="mi">3</span><span class="p">.</span><span class="mi">0</span>    <span class="mi">5</span><span class="p">.</span><span class="mi">0</span>
+       <span class="n">Total</span> <span class="n">Amount</span> <span class="p">(</span><span class="err">$</span><span class="p">)</span>  <span class="mi">179</span><span class="p">.</span><span class="mi">0</span>  <span class="mi">171</span><span class="p">.</span><span class="mi">0</span>  <span class="mi">350</span><span class="p">.</span><span class="mi">0</span>
+</pre></div>
+
+
+<p>The DataFrame has the following hierarchial indexing properties: 2 levels of column indices and 2 levels of row indices.</p>
+<p>For the column indices:</p>
+<p>:::python
+    &gt;&gt; df_unstack.columns</p>
+<div class="highlight"><pre><span></span><span class="err">MultiIndex([(&#39;value&#39;, &#39;BU1&#39;),</span>
+<span class="err">        (&#39;value&#39;, &#39;BU2&#39;)],</span>
+<span class="err">       names=[None, &#39;Buyer&#39;])</span>
+</pre></div>
+
+
+<p>For the row indices:</p>
+<p>:::python
+    &gt;&gt; df_unstack.index</p>
+<div class="highlight"><pre><span></span><span class="err">MultiIndex([(&#39;A&#39;,            &#39;Count&#39;),</span>
+<span class="err">            (&#39;A&#39;, &#39;Total Amount ($)&#39;),</span>
+<span class="err">            (&#39;B&#39;,            &#39;Count&#39;),</span>
+<span class="err">            (&#39;B&#39;, &#39;Total Amount ($)&#39;),</span>
+<span class="err">            (&#39;C&#39;,            &#39;Count&#39;),</span>
+<span class="err">            (&#39;C&#39;, &#39;Total Amount ($)&#39;),</span>
+<span class="err">            (&#39;D&#39;,            &#39;Count&#39;),</span>
+<span class="err">            (&#39;D&#39;, &#39;Total Amount ($)&#39;),</span>
+<span class="err">            (&#39;E&#39;,            &#39;Count&#39;),</span>
+<span class="err">            (&#39;E&#39;, &#39;Total Amount ($)&#39;)],</span>
+<span class="err">           names=[&#39;Vendor&#39;, &#39;variable&#39;])</span>
+</pre></div>
+
+
 <h3>Step 2: Create backend table for metric used in the conditions</h3>
 <p>For example, I would like to use a ratio of two variables as one of the metrics for the upper-bound/lower-bound conditions. As the ratio is not explicitly displayed on the data table, I create a backend table to store the ratios.</p>
 <p>:::python</p>

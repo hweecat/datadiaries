@@ -1,7 +1,7 @@
 Title: Dataframe manipulation sequence - GroupBy Agg, Melt, Unstack
-Date: 2020-01-09 18:06
+Date: 2020-01-20 18:06
 Category: Pandas
-Status: draft
+Status: published
 
 ## Problem
 
@@ -195,6 +195,8 @@ Reset index of DataFrame in order to sort the data by Buyer and Vendor using **s
           Total Amount ($)   1.0   NaN  103.0  30.0  179.0
     BU2   Count              2.0   2.0    3.0   1.0    3.0
           Total Amount ($)  15.0  60.0  262.0  23.0  171.0
+
+Since I am interested in calculating the overall Count and Total Amount for each Vendor, I pivot the Buyer level to the column axis and retain the Vendor level in the row axis, and calculate the sum along the column axis.
 
     >> df_unstack = df_multiindex.unstack(level=-2)
 
