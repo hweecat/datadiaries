@@ -37,7 +37,6 @@ From a Pandas DataFrame, massage the DataFrame into a format where order Count a
     14      E   BU1      23
     15      E   BU2      14
 
-
 ## What I did
 
 First, compute the aggregate values (Count, Total Amount ($)) for Vendor-Buyer combinations by using GroupBy aggregation (groupby().agg()):
