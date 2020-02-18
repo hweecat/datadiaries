@@ -39,7 +39,7 @@ From a Pandas DataFrame, massage the DataFrame into a format where order Count a
 
 ## What I did
 
-First, compute the aggregate values (Count, Total Amount ($)) for Vendor-Buyer combinations by using GroupBy aggregation (groupby().agg()):
+First, compute the aggregate values (Count, Total Amount ($)) for Vendor-Buyer combinations by using **GroupBy aggregation (groupby().agg())**:
 
 :::python
 
@@ -215,3 +215,12 @@ Since I am interested in calculating the overall Count and Total Amount for each
            Total Amount ($)   30.0   23.0   53.0
     E      Count               2.0    3.0    5.0
            Total Amount ($)  179.0  171.0  350.0
+
+## References
+
+- [Group By: split-apply-combine - pandas 1.0.1 documentation](https://pandas.pydata.org/pandas-docs/stable/user_guide/groupby.html)
+- [MultiIndex / advanced indexing - pandas 1.0.1 documentation](https://pandas.pydata.org/pandas-docs/stable/user_guide/advanced.html)
+- [Reshaping and pivot tables - pandas 1.0.1 documentation](https://pandas.pydata.org/pandas-docs/stable/user_guide/reshaping.html)
+- [pandas.DataFrame.sort_values - pandas 1.0.1 documentation](https://pandas.pydata.org/pandas-docs/stable/reference/api/pandas.DataFrame.sort_values.html)
+- [pandas.DataFrame.melt - pandas 1.0.1 documentation](https://pandas.pydata.org/pandas-docs/stable/reference/api/pandas.DataFrame.melt.html)
+- [pandas.DataFrame.unstack - pandas 1.0.1 documentation](https://pandas.pydata.org/pandas-docs/stable/reference/api/pandas.DataFrame.unstack.html)
