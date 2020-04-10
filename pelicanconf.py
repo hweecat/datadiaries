@@ -4,7 +4,7 @@ from __future__ import unicode_literals
 
 AUTHOR = 'Ong Chin Hwee'
 SITENAME = 'Today I Learnt - Data Engineering Diaries'
-SITEURL = 'https://datadiaries.commons.host'
+SITEURL = 'https://datadiaries.dev'
 
 PATH = 'content'
 
