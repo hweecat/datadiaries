@@ -13,8 +13,7 @@ module.exports = () => ({
       },
       fallback: {
         200: 'app.html'
-      },
-      manifest: 'serverpush.json'
+      }
     },
 	{
       domain: 'datadiaries.commons.host',
@@ -23,8 +22,7 @@ module.exports = () => ({
       },
       fallback: {
         200: 'app.html'
-      },
-      manifest: 'serverpush.json'
+      }
     }
   ]
 })

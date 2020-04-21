@@ -3,230 +3,44 @@
 <head>
         <meta charset="utf-8" />
         <title>Today I Learnt - Data Engineering Diaries - Pandas</title>
-        <link rel="stylesheet" href="https://datadiaries.commons.host/theme/css/main.css" />
+        <link rel="stylesheet" href="https://datadiaries.dev/theme/css/main.css" />
 </head>
 
 <body id="index" class="home">
         <header id="banner" class="body">
-                <h1><a href="https://datadiaries.commons.host/">Today I Learnt - Data Engineering Diaries </a></h1>
+                <h1><a href="https://datadiaries.dev/">Today I Learnt - Data Engineering Diaries </a></h1>
                 <nav><ul>
-                    <li class="active"><a href="https://datadiaries.commons.host/category/pandas.html">Pandas</a></li>
+                    <li class="active"><a href="https://datadiaries.dev/category/pandas.html">Pandas</a></li>
                 </ul></nav>
         </header><!-- /#banner -->
 
             <aside id="featured" class="body">
                 <article>
-                    <h1 class="entry-title"><a href="https://datadiaries.commons.host/dataframe-manipulation-sequence-groupby-agg-melt-unstack.html">Dataframe manipulation sequence - GroupBy Agg, Melt, Unstack</a></h1>
+                    <h1 class="entry-title"><a href="https://datadiaries.dev/conditional-colors-in-plotly-tables.html">Conditional Colors in Plotly Tables</a></h1>
 <footer class="post-info">
-        <abbr class="published" title="2020-01-20T18:06:00+08:00">
-                Published: Mon 20 January 2020
+        <abbr class="published" title="2020-02-05T18:06:00+08:00">
+                Published: Wed 05 February 2020
         </abbr>
 
         <address class="vcard author">
-                By                         <a class="url fn" href="https://datadiaries.commons.host/author/ong-chin-hwee.html">Ong Chin Hwee</a>
+                By                         <a class="url fn" href="https://datadiaries.dev/author/ong-chin-hwee.html">Ong Chin Hwee</a>
         </address>
-<p>In <a href="https://datadiaries.commons.host/category/pandas.html">Pandas</a>.</p>
+<p>In <a href="https://datadiaries.dev/category/pandas.html">Pandas</a>.</p>
 
 </footer><!-- /.post-info --><h2>Problem</h2>
-<p>From a Pandas DataFrame, massage the DataFrame into a format where order Count and Total Amount could be determined for each Vendor and each Vendor-Buyer combination.</p>
-<p>:::python</p>
-<div class="highlight"><pre><span></span><span class="o">&gt;&gt;</span> <span class="n">df</span> <span class="o">=</span> <span class="n">pd</span><span class="p">.</span><span class="n">DataFrame</span><span class="p">(</span><span class="k">data</span><span class="o">=</span>
-    <span class="err">{</span><span class="s1">&#39;Vendor&#39;</span><span class="p">:</span> <span class="p">[</span><span class="s1">&#39;A&#39;</span><span class="p">,</span> <span class="s1">&#39;A&#39;</span><span class="p">,</span> <span class="s1">&#39;A&#39;</span><span class="p">,</span> <span class="s1">&#39;B&#39;</span><span class="p">,</span> <span class="s1">&#39;B&#39;</span><span class="p">,</span> <span class="s1">&#39;C&#39;</span><span class="p">,</span> <span class="s1">&#39;C&#39;</span><span class="p">,</span> <span class="s1">&#39;C&#39;</span><span class="p">,</span> <span class="s1">&#39;C&#39;</span><span class="p">,</span>
-            <span class="s1">&#39;D&#39;</span><span class="p">,</span> <span class="s1">&#39;D&#39;</span><span class="p">,</span> <span class="s1">&#39;E&#39;</span><span class="p">,</span> <span class="s1">&#39;E&#39;</span><span class="p">,</span> <span class="s1">&#39;E&#39;</span><span class="p">,</span> <span class="s1">&#39;E&#39;</span><span class="p">,</span> <span class="s1">&#39;E&#39;</span><span class="p">],</span>      
-    <span class="s1">&#39;Buyer&#39;</span><span class="p">:[</span><span class="s1">&#39;BU1&#39;</span><span class="p">,</span> <span class="s1">&#39;BU2&#39;</span><span class="p">,</span> <span class="s1">&#39;BU2&#39;</span><span class="p">,</span> <span class="s1">&#39;BU2&#39;</span><span class="p">,</span> <span class="s1">&#39;BU2&#39;</span><span class="p">,</span> <span class="s1">&#39;BU1&#39;</span><span class="p">,</span> <span class="s1">&#39;BU2&#39;</span><span class="p">,</span> <span class="s1">&#39;BU2&#39;</span><span class="p">,</span> <span class="s1">&#39;BU2&#39;</span><span class="p">,</span>
-            <span class="s1">&#39;BU1&#39;</span><span class="p">,</span> <span class="s1">&#39;BU2&#39;</span><span class="p">,</span> <span class="s1">&#39;BU1&#39;</span><span class="p">,</span> <span class="s1">&#39;BU2&#39;</span><span class="p">,</span> <span class="s1">&#39;BU2&#39;</span><span class="p">,</span> <span class="s1">&#39;BU1&#39;</span><span class="p">,</span> <span class="s1">&#39;BU2&#39;</span><span class="p">],</span>
-    <span class="s1">&#39;Amount&#39;</span><span class="p">:[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">5</span><span class="p">,</span> <span class="mi">10</span><span class="p">,</span> <span class="mi">20</span><span class="p">,</span> <span class="mi">40</span><span class="p">,</span> <span class="mi">103</span><span class="p">,</span> <span class="mi">234</span><span class="p">,</span> <span class="mi">13</span><span class="p">,</span> <span class="mi">15</span><span class="p">,</span> <span class="mi">30</span><span class="p">,</span>
-        <span class="mi">23</span><span class="p">,</span> <span class="mi">156</span><span class="p">,</span> <span class="mi">60</span><span class="p">,</span> <span class="mi">97</span><span class="p">,</span> <span class="mi">23</span><span class="p">,</span> <span class="mi">14</span><span class="p">]</span><span class="err">}</span><span class="p">)</span>
-
-<span class="o">&gt;&gt;</span> <span class="n">df</span>
-
-   <span class="n">Vendor</span> <span class="n">Buyer</span>  <span class="n">Amount</span>
-<span class="mi">0</span>       <span class="n">A</span>   <span class="n">BU1</span>       <span class="mi">1</span>
-<span class="mi">1</span>       <span class="n">A</span>   <span class="n">BU2</span>       <span class="mi">5</span>
-<span class="mi">2</span>       <span class="n">A</span>   <span class="n">BU2</span>      <span class="mi">10</span>
-<span class="mi">3</span>       <span class="n">B</span>   <span class="n">BU2</span>      <span class="mi">20</span>
-<span class="mi">4</span>       <span class="n">B</span>   <span class="n">BU2</span>      <span class="mi">40</span>
-<span class="mi">5</span>       <span class="k">C</span>   <span class="n">BU1</span>     <span class="mi">103</span>
-<span class="mi">6</span>       <span class="k">C</span>   <span class="n">BU2</span>     <span class="mi">234</span>
-<span class="mi">7</span>       <span class="k">C</span>   <span class="n">BU2</span>      <span class="mi">13</span>
-<span class="mi">8</span>       <span class="k">C</span>   <span class="n">BU2</span>      <span class="mi">15</span>
-<span class="mi">9</span>       <span class="n">D</span>   <span class="n">BU1</span>      <span class="mi">30</span>
-<span class="mi">10</span>      <span class="n">D</span>   <span class="n">BU2</span>      <span class="mi">23</span>
-<span class="mi">11</span>      <span class="n">E</span>   <span class="n">BU1</span>     <span class="mi">156</span>
-<span class="mi">12</span>      <span class="n">E</span>   <span class="n">BU2</span>      <span class="mi">60</span>
-<span class="mi">13</span>      <span class="n">E</span>   <span class="n">BU2</span>      <span class="mi">97</span>
-<span class="mi">14</span>      <span class="n">E</span>   <span class="n">BU1</span>      <span class="mi">23</span>
-<span class="mi">15</span>      <span class="n">E</span>   <span class="n">BU2</span>      <span class="mi">14</span>
-</pre></div>
-
-
+<p>Generate a data table in Plotly that has the following features:</p>
+<ol>
+<li>Alternating cell and line colors for odd/even rows</li>
+<li>Unique cell color on first column</li>
+<li>For third column onwards, color cells using two different colors based on two levels of upper-bound/lower-bound conditions</li>
+</ol>
 <h2>What I did</h2>
-<p>First, compute the aggregate values (Count, Total Amount ($)) for Vendor-Buyer combinations by using <strong>GroupBy aggregation (groupby().agg())</strong>:</p>
+<h3>Step 1: Define Pandas DataFrame to transform into Plotly Table</h3>
+<p>Let's go back to the table that was created in the previous note:</p>
 <p>:::python</p>
-<div class="highlight"><pre><span></span><span class="o">&gt;&gt;</span> <span class="n">agg_df</span> <span class="o">=</span> <span class="err">\</span>
-    <span class="n">df</span><span class="p">.</span><span class="n">groupby</span><span class="p">(</span>
-        <span class="p">[</span><span class="s1">&#39;Vendor&#39;</span><span class="p">,</span> <span class="s1">&#39;Buyer&#39;</span><span class="p">]).</span><span class="n">agg</span><span class="p">(</span><span class="o">**</span><span class="err">{</span>
-            <span class="s1">&#39;Count&#39;</span><span class="p">:</span> <span class="n">pd</span><span class="p">.</span><span class="n">NamedAgg</span><span class="p">(</span><span class="k">column</span><span class="o">=</span><span class="s1">&#39;Amount&#39;</span><span class="p">,</span> <span class="n">aggfunc</span><span class="o">=</span><span class="s1">&#39;count&#39;</span><span class="p">),</span>
-            <span class="s1">&#39;Total Amount ($)&#39;</span><span class="p">:</span> <span class="n">pd</span><span class="p">.</span><span class="n">NamedAgg</span><span class="p">(</span><span class="k">column</span><span class="o">=</span><span class="s1">&#39;Amount&#39;</span><span class="p">,</span> <span class="n">aggfunc</span><span class="o">=</span><span class="n">np</span><span class="p">.</span><span class="k">sum</span><span class="p">)</span>
-        <span class="err">}</span><span class="p">)</span>
+<div class="highlight"><pre><span></span><span class="o">&gt;&gt;</span> <span class="n">df_unstack</span>
 
-<span class="o">&gt;&gt;</span> <span class="n">agg_df</span>
-
-              <span class="k">Count</span>  <span class="n">Total</span> <span class="n">Amount</span> <span class="p">(</span><span class="err">$</span><span class="p">)</span>
-<span class="n">Vendor</span> <span class="n">Buyer</span>
-<span class="n">A</span>      <span class="n">BU1</span>        <span class="mi">1</span>                 <span class="mi">1</span>
-       <span class="n">BU2</span>        <span class="mi">2</span>                <span class="mi">15</span>
-<span class="n">B</span>      <span class="n">BU2</span>        <span class="mi">2</span>                <span class="mi">60</span>
-<span class="k">C</span>      <span class="n">BU1</span>        <span class="mi">1</span>               <span class="mi">103</span>
-       <span class="n">BU2</span>        <span class="mi">3</span>               <span class="mi">262</span>
-<span class="n">D</span>      <span class="n">BU1</span>        <span class="mi">1</span>                <span class="mi">30</span>
-       <span class="n">BU2</span>        <span class="mi">1</span>                <span class="mi">23</span>
-<span class="n">E</span>      <span class="n">BU1</span>        <span class="mi">2</span>               <span class="mi">179</span>
-       <span class="n">BU2</span>        <span class="mi">3</span>               <span class="mi">171</span>
-</pre></div>
-
-
-<p>Reset index of DataFrame in order to sort the data by Buyer and Vendor using <strong>sort_values</strong>.</p>
-<div class="highlight"><pre><span></span><span class="o">&gt;&gt;</span> <span class="n">agg_df_2</span> <span class="o">=</span> <span class="n">agg_df</span><span class="p">.</span><span class="n">reset_index</span><span class="p">()</span>
-
-<span class="o">&gt;&gt;</span> <span class="n">agg_df_2</span>
-
-    <span class="n">Vendor</span> <span class="n">Buyer</span>  <span class="k">Count</span>  <span class="n">Total</span> <span class="n">Amount</span> <span class="p">(</span><span class="err">$</span><span class="p">)</span>
-<span class="mi">0</span>      <span class="n">A</span>   <span class="n">BU1</span>      <span class="mi">1</span>                 <span class="mi">1</span>
-<span class="mi">1</span>      <span class="n">A</span>   <span class="n">BU2</span>      <span class="mi">2</span>                <span class="mi">15</span>
-<span class="mi">2</span>      <span class="n">B</span>   <span class="n">BU2</span>      <span class="mi">2</span>                <span class="mi">60</span>
-<span class="mi">3</span>      <span class="k">C</span>   <span class="n">BU1</span>      <span class="mi">1</span>               <span class="mi">103</span>
-<span class="mi">4</span>      <span class="k">C</span>   <span class="n">BU2</span>      <span class="mi">3</span>               <span class="mi">262</span>
-<span class="mi">5</span>      <span class="n">D</span>   <span class="n">BU1</span>      <span class="mi">1</span>                <span class="mi">30</span>
-<span class="mi">6</span>      <span class="n">D</span>   <span class="n">BU2</span>      <span class="mi">1</span>                <span class="mi">23</span>
-<span class="mi">7</span>      <span class="n">E</span>   <span class="n">BU1</span>      <span class="mi">2</span>               <span class="mi">179</span>
-<span class="mi">8</span>      <span class="n">E</span>   <span class="n">BU2</span>      <span class="mi">3</span>               <span class="mi">171</span>
-
-<span class="o">&gt;&gt;</span> <span class="n">agg_df_3</span> <span class="o">=</span> <span class="n">agg_df_2</span><span class="p">.</span><span class="n">sort_values</span><span class="p">([</span><span class="s1">&#39;Buyer&#39;</span><span class="p">,</span> <span class="s1">&#39;Vendor&#39;</span><span class="p">])</span>
-
-<span class="o">&gt;&gt;</span> <span class="n">agg_df_3</span>
-
-    <span class="n">Vendor</span> <span class="n">Buyer</span>  <span class="k">Count</span>  <span class="n">Total</span> <span class="n">Amount</span> <span class="p">(</span><span class="err">$</span><span class="p">)</span>
-<span class="mi">0</span>      <span class="n">A</span>   <span class="n">BU1</span>      <span class="mi">1</span>                 <span class="mi">1</span>
-<span class="mi">3</span>      <span class="k">C</span>   <span class="n">BU1</span>      <span class="mi">1</span>               <span class="mi">103</span>
-<span class="mi">5</span>      <span class="n">D</span>   <span class="n">BU1</span>      <span class="mi">1</span>                <span class="mi">30</span>
-<span class="mi">7</span>      <span class="n">E</span>   <span class="n">BU1</span>      <span class="mi">2</span>               <span class="mi">179</span>
-<span class="mi">1</span>      <span class="n">A</span>   <span class="n">BU2</span>      <span class="mi">2</span>                <span class="mi">15</span>
-<span class="mi">2</span>      <span class="n">B</span>   <span class="n">BU2</span>      <span class="mi">2</span>                <span class="mi">60</span>
-<span class="mi">4</span>      <span class="k">C</span>   <span class="n">BU2</span>      <span class="mi">3</span>               <span class="mi">262</span>
-<span class="mi">6</span>      <span class="n">D</span>   <span class="n">BU2</span>      <span class="mi">1</span>                <span class="mi">23</span>
-<span class="mi">8</span>      <span class="n">E</span>   <span class="n">BU2</span>      <span class="mi">3</span>               <span class="mi">171</span>
-</pre></div>
-
-
-<p><strong>DataFrame.melt</strong> "unpivots" a DataFrame into a format where one or more columns are identifier variables (id_vars), while all other columns, considered measured variables (value_vars), are "unpivoted" to the row axis. This leaves two non-identifier columns, 'variable' and 'value', where 'variable' contains the measured variables and 'value' contains the values corresponding to the measured variables.</p>
-<div class="highlight"><pre><span></span><span class="o">&gt;&gt;</span> <span class="n">df_melt</span> <span class="o">=</span> <span class="n">agg_df_3</span><span class="p">.</span><span class="n">melt</span><span class="p">(</span>
-        <span class="n">id_vars</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;Vendor&#39;</span><span class="p">,</span> <span class="s1">&#39;Buyer&#39;</span><span class="p">],</span>
-        <span class="n">value_vars</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;Count&#39;</span><span class="p">,</span> <span class="s1">&#39;Total Amount ($)&#39;</span><span class="p">]</span>
-        <span class="p">)</span>
-
-<span class="o">&gt;&gt;</span> <span class="n">df_melt</span>
-
-    <span class="n">Vendor</span> <span class="n">Buyer</span>          <span class="k">variable</span>  <span class="n">value</span>
-<span class="mi">0</span>       <span class="n">A</span>   <span class="n">BU1</span>             <span class="k">Count</span>      <span class="mi">1</span>
-<span class="mi">1</span>       <span class="k">C</span>   <span class="n">BU1</span>             <span class="k">Count</span>      <span class="mi">1</span>
-<span class="mi">2</span>       <span class="n">D</span>   <span class="n">BU1</span>             <span class="k">Count</span>      <span class="mi">1</span>
-<span class="mi">3</span>       <span class="n">E</span>   <span class="n">BU1</span>             <span class="k">Count</span>      <span class="mi">2</span>
-<span class="mi">4</span>       <span class="n">A</span>   <span class="n">BU2</span>             <span class="k">Count</span>      <span class="mi">2</span>
-<span class="mi">5</span>       <span class="n">B</span>   <span class="n">BU2</span>             <span class="k">Count</span>      <span class="mi">2</span>
-<span class="mi">6</span>       <span class="k">C</span>   <span class="n">BU2</span>             <span class="k">Count</span>      <span class="mi">3</span>
-<span class="mi">7</span>       <span class="n">D</span>   <span class="n">BU2</span>             <span class="k">Count</span>      <span class="mi">1</span>
-<span class="mi">8</span>       <span class="n">E</span>   <span class="n">BU2</span>             <span class="k">Count</span>      <span class="mi">3</span>
-<span class="mi">9</span>       <span class="n">A</span>   <span class="n">BU1</span>  <span class="n">Total</span> <span class="n">Amount</span> <span class="p">(</span><span class="err">$</span><span class="p">)</span>      <span class="mi">1</span>
-<span class="mi">10</span>      <span class="k">C</span>   <span class="n">BU1</span>  <span class="n">Total</span> <span class="n">Amount</span> <span class="p">(</span><span class="err">$</span><span class="p">)</span>    <span class="mi">103</span>
-<span class="mi">11</span>      <span class="n">D</span>   <span class="n">BU1</span>  <span class="n">Total</span> <span class="n">Amount</span> <span class="p">(</span><span class="err">$</span><span class="p">)</span>     <span class="mi">30</span>
-<span class="mi">12</span>      <span class="n">E</span>   <span class="n">BU1</span>  <span class="n">Total</span> <span class="n">Amount</span> <span class="p">(</span><span class="err">$</span><span class="p">)</span>    <span class="mi">179</span>
-<span class="mi">13</span>      <span class="n">A</span>   <span class="n">BU2</span>  <span class="n">Total</span> <span class="n">Amount</span> <span class="p">(</span><span class="err">$</span><span class="p">)</span>     <span class="mi">15</span>
-<span class="mi">14</span>      <span class="n">B</span>   <span class="n">BU2</span>  <span class="n">Total</span> <span class="n">Amount</span> <span class="p">(</span><span class="err">$</span><span class="p">)</span>     <span class="mi">60</span>
-<span class="mi">15</span>      <span class="k">C</span>   <span class="n">BU2</span>  <span class="n">Total</span> <span class="n">Amount</span> <span class="p">(</span><span class="err">$</span><span class="p">)</span>    <span class="mi">262</span>
-<span class="mi">16</span>      <span class="n">D</span>   <span class="n">BU2</span>  <span class="n">Total</span> <span class="n">Amount</span> <span class="p">(</span><span class="err">$</span><span class="p">)</span>     <span class="mi">23</span>
-<span class="mi">17</span>      <span class="n">E</span>   <span class="n">BU2</span>  <span class="n">Total</span> <span class="n">Amount</span> <span class="p">(</span><span class="err">$</span><span class="p">)</span>    <span class="mi">171</span>
-</pre></div>
-
-
-<p><strong>DataFrame.unstack</strong> "pivots" a level of the hierarchial index labels to the column axis and returns a reshaped DataFrame with a new level of column labels, whose inner-most level consists of the pivoted index labels. This implies that a DataFrame which does not have indexing on the row axis will be "pivoted" to a Series.</p>
-<div class="highlight"><pre><span></span><span class="o">&gt;&gt;</span> <span class="n">df_multiindex</span> <span class="o">=</span> <span class="n">df_melt</span><span class="p">.</span><span class="n">set_index</span><span class="p">(</span>
-                    <span class="p">[</span><span class="s1">&#39;Vendor&#39;</span><span class="p">,</span> <span class="s1">&#39;Buyer&#39;</span><span class="p">,</span> <span class="s1">&#39;variable&#39;</span><span class="p">]</span>
-                    <span class="p">)</span>
-
-<span class="o">&gt;&gt;</span> <span class="n">df_multiindex</span>
-
-                                <span class="n">value</span>
-<span class="n">Vendor</span> <span class="n">Buyer</span> <span class="k">variable</span>
-<span class="n">A</span>      <span class="n">BU1</span>   <span class="k">Count</span>                 <span class="mi">1</span>
-<span class="k">C</span>      <span class="n">BU1</span>   <span class="k">Count</span>                 <span class="mi">1</span>
-<span class="n">D</span>      <span class="n">BU1</span>   <span class="k">Count</span>                 <span class="mi">1</span>
-<span class="n">E</span>      <span class="n">BU1</span>   <span class="k">Count</span>                 <span class="mi">2</span>
-<span class="n">A</span>      <span class="n">BU2</span>   <span class="k">Count</span>                 <span class="mi">2</span>
-<span class="n">B</span>      <span class="n">BU2</span>   <span class="k">Count</span>                 <span class="mi">2</span>
-<span class="k">C</span>      <span class="n">BU2</span>   <span class="k">Count</span>                 <span class="mi">3</span>
-<span class="n">D</span>      <span class="n">BU2</span>   <span class="k">Count</span>                 <span class="mi">1</span>
-<span class="n">E</span>      <span class="n">BU2</span>   <span class="k">Count</span>                 <span class="mi">3</span>
-<span class="n">A</span>      <span class="n">BU1</span>   <span class="n">Total</span> <span class="n">Amount</span> <span class="p">(</span><span class="err">$</span><span class="p">)</span>      <span class="mi">1</span>
-<span class="k">C</span>      <span class="n">BU1</span>   <span class="n">Total</span> <span class="n">Amount</span> <span class="p">(</span><span class="err">$</span><span class="p">)</span>    <span class="mi">103</span>
-<span class="n">D</span>      <span class="n">BU1</span>   <span class="n">Total</span> <span class="n">Amount</span> <span class="p">(</span><span class="err">$</span><span class="p">)</span>     <span class="mi">30</span>
-<span class="n">E</span>      <span class="n">BU1</span>   <span class="n">Total</span> <span class="n">Amount</span> <span class="p">(</span><span class="err">$</span><span class="p">)</span>    <span class="mi">179</span>
-<span class="n">A</span>      <span class="n">BU2</span>   <span class="n">Total</span> <span class="n">Amount</span> <span class="p">(</span><span class="err">$</span><span class="p">)</span>     <span class="mi">15</span>
-<span class="n">B</span>      <span class="n">BU2</span>   <span class="n">Total</span> <span class="n">Amount</span> <span class="p">(</span><span class="err">$</span><span class="p">)</span>     <span class="mi">60</span>
-<span class="k">C</span>      <span class="n">BU2</span>   <span class="n">Total</span> <span class="n">Amount</span> <span class="p">(</span><span class="err">$</span><span class="p">)</span>    <span class="mi">262</span>
-<span class="n">D</span>      <span class="n">BU2</span>   <span class="n">Total</span> <span class="n">Amount</span> <span class="p">(</span><span class="err">$</span><span class="p">)</span>     <span class="mi">23</span>
-<span class="n">E</span>      <span class="n">BU2</span>   <span class="n">Total</span> <span class="n">Amount</span> <span class="p">(</span><span class="err">$</span><span class="p">)</span>    <span class="mi">171</span>
-
-<span class="o">&gt;&gt;</span> <span class="n">df_multiindex</span><span class="p">.</span><span class="n">unstack</span><span class="p">(</span><span class="k">level</span><span class="o">=-</span><span class="mi">2</span><span class="p">)</span>
-
-                             <span class="n">value</span>
-<span class="n">Buyer</span>                      <span class="n">BU1</span>    <span class="n">BU2</span>
-<span class="n">Vendor</span> <span class="k">variable</span>
-<span class="n">A</span>      <span class="k">Count</span>               <span class="mi">1</span><span class="p">.</span><span class="mi">0</span>    <span class="mi">2</span><span class="p">.</span><span class="mi">0</span>
-       <span class="n">Total</span> <span class="n">Amount</span> <span class="p">(</span><span class="err">$</span><span class="p">)</span>    <span class="mi">1</span><span class="p">.</span><span class="mi">0</span>   <span class="mi">15</span><span class="p">.</span><span class="mi">0</span>
-<span class="n">B</span>      <span class="k">Count</span>               <span class="n">NaN</span>    <span class="mi">2</span><span class="p">.</span><span class="mi">0</span>
-       <span class="n">Total</span> <span class="n">Amount</span> <span class="p">(</span><span class="err">$</span><span class="p">)</span>    <span class="n">NaN</span>   <span class="mi">60</span><span class="p">.</span><span class="mi">0</span>
-<span class="k">C</span>      <span class="k">Count</span>               <span class="mi">1</span><span class="p">.</span><span class="mi">0</span>    <span class="mi">3</span><span class="p">.</span><span class="mi">0</span>
-       <span class="n">Total</span> <span class="n">Amount</span> <span class="p">(</span><span class="err">$</span><span class="p">)</span>  <span class="mi">103</span><span class="p">.</span><span class="mi">0</span>  <span class="mi">262</span><span class="p">.</span><span class="mi">0</span>
-<span class="n">D</span>      <span class="k">Count</span>               <span class="mi">1</span><span class="p">.</span><span class="mi">0</span>    <span class="mi">1</span><span class="p">.</span><span class="mi">0</span>
-       <span class="n">Total</span> <span class="n">Amount</span> <span class="p">(</span><span class="err">$</span><span class="p">)</span>   <span class="mi">30</span><span class="p">.</span><span class="mi">0</span>   <span class="mi">23</span><span class="p">.</span><span class="mi">0</span>
-<span class="n">E</span>      <span class="k">Count</span>               <span class="mi">2</span><span class="p">.</span><span class="mi">0</span>    <span class="mi">3</span><span class="p">.</span><span class="mi">0</span>
-       <span class="n">Total</span> <span class="n">Amount</span> <span class="p">(</span><span class="err">$</span><span class="p">)</span>  <span class="mi">179</span><span class="p">.</span><span class="mi">0</span>  <span class="mi">171</span><span class="p">.</span><span class="mi">0</span>
-
-<span class="o">&gt;&gt;&gt;</span> <span class="n">df_multiindex</span><span class="p">.</span><span class="n">unstack</span><span class="p">(</span><span class="k">level</span><span class="o">=-</span><span class="mi">1</span><span class="p">)</span>
-
-                 <span class="n">value</span>
-<span class="k">variable</span>     <span class="k">Count</span> <span class="n">Total</span> <span class="n">Amount</span> <span class="p">(</span><span class="err">$</span><span class="p">)</span>
-<span class="n">Vendor</span> <span class="n">Buyer</span>
-<span class="n">A</span>      <span class="n">BU1</span>       <span class="mi">1</span>                <span class="mi">1</span>
-       <span class="n">BU2</span>       <span class="mi">2</span>               <span class="mi">15</span>
-<span class="n">B</span>      <span class="n">BU2</span>       <span class="mi">2</span>               <span class="mi">60</span>
-<span class="k">C</span>      <span class="n">BU1</span>       <span class="mi">1</span>              <span class="mi">103</span>
-       <span class="n">BU2</span>       <span class="mi">3</span>              <span class="mi">262</span>
-<span class="n">D</span>      <span class="n">BU1</span>       <span class="mi">1</span>               <span class="mi">30</span>
-       <span class="n">BU2</span>       <span class="mi">1</span>               <span class="mi">23</span>
-<span class="n">E</span>      <span class="n">BU1</span>       <span class="mi">2</span>              <span class="mi">179</span>
-       <span class="n">BU2</span>       <span class="mi">3</span>              <span class="mi">171</span>
-
-<span class="o">&gt;&gt;&gt;</span> <span class="n">df_multiindex</span><span class="p">.</span><span class="n">unstack</span><span class="p">(</span><span class="k">level</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
-
-                       <span class="n">value</span>
-<span class="n">Vendor</span>                     <span class="n">A</span>     <span class="n">B</span>      <span class="k">C</span>     <span class="n">D</span>      <span class="n">E</span>
-<span class="n">Buyer</span> <span class="k">variable</span>
-<span class="n">BU1</span>   <span class="k">Count</span>              <span class="mi">1</span><span class="p">.</span><span class="mi">0</span>   <span class="n">NaN</span>    <span class="mi">1</span><span class="p">.</span><span class="mi">0</span>   <span class="mi">1</span><span class="p">.</span><span class="mi">0</span>    <span class="mi">2</span><span class="p">.</span><span class="mi">0</span>
-      <span class="n">Total</span> <span class="n">Amount</span> <span class="p">(</span><span class="err">$</span><span class="p">)</span>   <span class="mi">1</span><span class="p">.</span><span class="mi">0</span>   <span class="n">NaN</span>  <span class="mi">103</span><span class="p">.</span><span class="mi">0</span>  <span class="mi">30</span><span class="p">.</span><span class="mi">0</span>  <span class="mi">179</span><span class="p">.</span><span class="mi">0</span>
-<span class="n">BU2</span>   <span class="k">Count</span>              <span class="mi">2</span><span class="p">.</span><span class="mi">0</span>   <span class="mi">2</span><span class="p">.</span><span class="mi">0</span>    <span class="mi">3</span><span class="p">.</span><span class="mi">0</span>   <span class="mi">1</span><span class="p">.</span><span class="mi">0</span>    <span class="mi">3</span><span class="p">.</span><span class="mi">0</span>
-      <span class="n">Total</span> <span class="n">Amount</span> <span class="p">(</span><span class="err">$</span><span class="p">)</span>  <span class="mi">15</span><span class="p">.</span><span class="mi">0</span>  <span class="mi">60</span><span class="p">.</span><span class="mi">0</span>  <span class="mi">262</span><span class="p">.</span><span class="mi">0</span>  <span class="mi">23</span><span class="p">.</span><span class="mi">0</span>  <span class="mi">171</span><span class="p">.</span><span class="mi">0</span>
-</pre></div>
-
-
-<p>Since I am interested in calculating the overall Count and Total Amount for each Vendor, I pivot the Buyer level to the column axis and retain the Vendor level in the row axis, and calculate the sum along the column axis.</p>
-<div class="highlight"><pre><span></span><span class="o">&gt;&gt;</span> <span class="n">df_unstack</span> <span class="o">=</span> <span class="n">df_multiindex</span><span class="p">.</span><span class="n">unstack</span><span class="p">(</span><span class="k">level</span><span class="o">=-</span><span class="mi">2</span><span class="p">)</span>
-
-<span class="o">&gt;&gt;</span> <span class="n">df_unstack</span><span class="p">[</span><span class="s1">&#39;Total&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">df_unstack</span><span class="p">.</span><span class="k">sum</span><span class="p">(</span><span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
-
-<span class="o">&gt;&gt;&gt;</span> <span class="n">df_unstack</span>
-                         <span class="n">value</span>         <span class="n">Total</span>
+                           <span class="n">value</span>         <span class="n">Total</span>
 <span class="n">Buyer</span>                      <span class="n">BU1</span>    <span class="n">BU2</span>
 <span class="n">Vendor</span> <span class="k">variable</span>
 <span class="n">A</span>      <span class="k">Count</span>               <span class="mi">1</span><span class="p">.</span><span class="mi">0</span>    <span class="mi">2</span><span class="p">.</span><span class="mi">0</span>    <span class="mi">3</span><span class="p">.</span><span class="mi">0</span>
@@ -242,15 +56,212 @@
 </pre></div>
 
 
-<h2>References</h2>
-<ul>
-<li><a href="https://pandas.pydata.org/pandas-docs/stable/user_guide/groupby.html">Group By: split-apply-combine - pandas 1.0.1 documentation</a></li>
-<li><a href="https://pandas.pydata.org/pandas-docs/stable/user_guide/advanced.html">MultiIndex / advanced indexing - pandas 1.0.1 documentation</a></li>
-<li><a href="https://pandas.pydata.org/pandas-docs/stable/user_guide/reshaping.html">Reshaping and pivot tables - pandas 1.0.1 documentation</a></li>
-<li><a href="https://pandas.pydata.org/pandas-docs/stable/reference/api/pandas.DataFrame.sort_values.html">pandas.DataFrame.sort_values - pandas 1.0.1 documentation</a></li>
-<li><a href="https://pandas.pydata.org/pandas-docs/stable/reference/api/pandas.DataFrame.melt.html">pandas.DataFrame.melt - pandas 1.0.1 documentation</a></li>
-<li><a href="https://pandas.pydata.org/pandas-docs/stable/reference/api/pandas.DataFrame.unstack.html">pandas.DataFrame.unstack - pandas 1.0.1 documentation</a></li>
-</ul>                </article>
+<p>The DataFrame has the following hierarchial indexing properties: 2 levels of column indices and 2 levels of row indices.</p>
+<p>For the column indices:</p>
+<p>:::python</p>
+<div class="highlight"><pre><span></span><span class="o">&gt;&gt;</span> <span class="n">df_unstack</span><span class="p">.</span><span class="n">columns</span>
+
+<span class="n">MultiIndex</span><span class="p">([(</span><span class="s1">&#39;value&#39;</span><span class="p">,</span> <span class="s1">&#39;BU1&#39;</span><span class="p">),</span>
+        <span class="p">(</span><span class="s1">&#39;value&#39;</span><span class="p">,</span> <span class="s1">&#39;BU2&#39;</span><span class="p">)],</span>
+       <span class="k">names</span><span class="o">=</span><span class="p">[</span><span class="k">None</span><span class="p">,</span> <span class="s1">&#39;Buyer&#39;</span><span class="p">])</span>
+</pre></div>
+
+
+<p>For the row indices:</p>
+<p>:::python</p>
+<div class="highlight"><pre><span></span><span class="o">&gt;&gt;</span> <span class="n">df_unstack</span><span class="p">.</span><span class="k">index</span>
+
+<span class="n">MultiIndex</span><span class="p">([(</span><span class="s1">&#39;A&#39;</span><span class="p">,</span>            <span class="s1">&#39;Count&#39;</span><span class="p">),</span>
+            <span class="p">(</span><span class="s1">&#39;A&#39;</span><span class="p">,</span> <span class="s1">&#39;Total Amount ($)&#39;</span><span class="p">),</span>
+            <span class="p">(</span><span class="s1">&#39;B&#39;</span><span class="p">,</span>            <span class="s1">&#39;Count&#39;</span><span class="p">),</span>
+            <span class="p">(</span><span class="s1">&#39;B&#39;</span><span class="p">,</span> <span class="s1">&#39;Total Amount ($)&#39;</span><span class="p">),</span>
+            <span class="p">(</span><span class="s1">&#39;C&#39;</span><span class="p">,</span>            <span class="s1">&#39;Count&#39;</span><span class="p">),</span>
+            <span class="p">(</span><span class="s1">&#39;C&#39;</span><span class="p">,</span> <span class="s1">&#39;Total Amount ($)&#39;</span><span class="p">),</span>
+            <span class="p">(</span><span class="s1">&#39;D&#39;</span><span class="p">,</span>            <span class="s1">&#39;Count&#39;</span><span class="p">),</span>
+            <span class="p">(</span><span class="s1">&#39;D&#39;</span><span class="p">,</span> <span class="s1">&#39;Total Amount ($)&#39;</span><span class="p">),</span>
+            <span class="p">(</span><span class="s1">&#39;E&#39;</span><span class="p">,</span>            <span class="s1">&#39;Count&#39;</span><span class="p">),</span>
+            <span class="p">(</span><span class="s1">&#39;E&#39;</span><span class="p">,</span> <span class="s1">&#39;Total Amount ($)&#39;</span><span class="p">)],</span>
+           <span class="k">names</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;Vendor&#39;</span><span class="p">,</span> <span class="s1">&#39;variable&#39;</span><span class="p">])</span>
+</pre></div>
+
+
+<h3>Step 2: Create backend table for metric used in the conditions</h3>
+<p>For example, I would like to use a ratio of two variables as one of the metrics for the upper-bound/lower-bound conditions. As the ratio is not explicitly displayed on the data table, I create a backend table to store the ratios.</p>
+<p>:::python</p>
+<div class="highlight"><pre><span></span><span class="n">def</span> <span class="n">pv_po_ratio_analysis</span><span class="p">(</span><span class="n">df_table</span><span class="p">,</span> <span class="n">column_level1_agg</span><span class="p">):</span>
+
+    <span class="n">po_count_df</span> <span class="o">=</span> <span class="n">df_table</span><span class="p">[</span>
+                    <span class="n">df_table</span><span class="p">[</span><span class="s1">&#39;Item&#39;</span><span class="p">]</span> <span class="o">==</span> <span class="s1">&#39;Count&#39;</span>
+                    <span class="p">].</span><span class="n">set_index</span><span class="p">(</span>
+                        <span class="p">[</span><span class="n">column_level1_agg</span><span class="p">,</span> <span class="s1">&#39;Item&#39;</span><span class="p">]</span>
+                        <span class="p">).</span><span class="n">reset_index</span><span class="p">(</span><span class="s1">&#39;Item&#39;</span>
+                                    <span class="p">).</span><span class="k">drop</span><span class="p">(</span><span class="n">columns</span><span class="o">=</span><span class="s1">&#39;Item&#39;</span><span class="p">)</span>
+
+    <span class="n">total_pv_df</span> <span class="o">=</span> <span class="n">df_table</span><span class="p">[</span>
+                    <span class="n">df_table</span><span class="p">[</span><span class="s1">&#39;Item&#39;</span><span class="p">]</span> <span class="o">==</span> <span class="s1">&#39;Total PV ($)&#39;</span>
+                    <span class="p">].</span><span class="n">set_index</span><span class="p">(</span>
+                        <span class="p">[</span><span class="n">column_level1_agg</span><span class="p">,</span> <span class="s1">&#39;Item&#39;</span><span class="p">]</span>
+                        <span class="p">).</span><span class="n">reset_index</span><span class="p">(</span><span class="s1">&#39;Item&#39;</span>
+                                    <span class="p">).</span><span class="k">drop</span><span class="p">(</span><span class="n">columns</span><span class="o">=</span><span class="s1">&#39;Item&#39;</span><span class="p">)</span>
+
+    <span class="n">pv_po_ratio_df</span> <span class="o">=</span> <span class="n">total_pv_df</span><span class="p">.</span><span class="n">div</span><span class="p">(</span><span class="n">po_count_df</span><span class="p">,</span> <span class="n">fill_value</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+
+    <span class="k">return</span> <span class="n">pv_po_ratio_df</span>
+</pre></div>
+
+
+<h3>Step 3: Define conditions for conditional formatting of cell colors</h3>
+<p>For this example, I would like to color cells using two different colors based on two levels of conditions:</p>
+<ol>
+<li>PO Count &gt;= T1</li>
+<li>PV/PO ratio &lt; T2 (pink) or PV/PO ratio &gt; T3 (yellow)</li>
+</ol>
+<p>Criteria no. 1 on PO Count needs to be fulfilled before traversing down to criteria 2 on PV/PO ratio. To obtain the boolean DataFrames that represent whether the value in each cell fulfils the less-than or more-than conditions for the metrics (in this case, PO Count and PV/PO ratio), we first define the DataFrames that represent these metrics.</p>
+<p>:::python</p>
+<div class="highlight"><pre><span></span><span class="o">#</span> <span class="n">define</span> <span class="n">DataFrame</span> <span class="k">for</span> <span class="n">the</span> <span class="n">metrics</span> <span class="n">PO</span> <span class="k">Count</span><span class="p">,</span> <span class="n">PV</span> <span class="k">and</span> <span class="n">PV</span><span class="o">/</span><span class="n">PO</span> <span class="n">ratio</span>
+
+<span class="n">po_count_df</span> <span class="o">=</span> <span class="n">df_table</span><span class="p">[</span>
+                <span class="n">df_table</span><span class="p">[</span><span class="s1">&#39;Item&#39;</span><span class="p">]</span> <span class="o">==</span> <span class="s1">&#39;Count&#39;</span>
+                <span class="p">].</span><span class="n">set_index</span><span class="p">(</span>
+                    <span class="p">[</span><span class="n">column_level1_agg</span><span class="p">,</span> <span class="s1">&#39;Item&#39;</span><span class="p">]</span>
+                    <span class="p">).</span><span class="n">reset_index</span><span class="p">(</span><span class="s1">&#39;Item&#39;</span>
+                                  <span class="p">).</span><span class="k">drop</span><span class="p">(</span><span class="n">columns</span><span class="o">=</span><span class="s1">&#39;Item&#39;</span><span class="p">)</span>
+
+<span class="n">pv_df</span> <span class="o">=</span> <span class="n">df_table</span><span class="p">[</span>
+                <span class="n">df_table</span><span class="p">[</span><span class="s1">&#39;Item&#39;</span><span class="p">]</span> <span class="o">==</span> <span class="s1">&#39;Total PV ($)&#39;</span>
+                <span class="p">].</span><span class="n">set_index</span><span class="p">(</span>
+                    <span class="p">[</span><span class="n">column_level1_agg</span><span class="p">,</span> <span class="s1">&#39;Item&#39;</span><span class="p">]</span>
+                    <span class="p">).</span><span class="n">reset_index</span><span class="p">(</span><span class="s1">&#39;Item&#39;</span>
+                                  <span class="p">).</span><span class="k">drop</span><span class="p">(</span><span class="n">columns</span><span class="o">=</span><span class="s1">&#39;Item&#39;</span><span class="p">)</span>
+
+<span class="n">pv_po_ratio_df</span> <span class="o">=</span> <span class="n">pv_po_ratio_analysis</span><span class="p">(</span><span class="n">df_table</span><span class="p">,</span> <span class="n">column_level1_agg</span><span class="p">)</span>
+</pre></div>
+
+
+<p>After the metric DataFrames are initialized, we make use of pandas-defined binary operator functions to apply boolean operations to the value in each cell.</p>
+<p>:::python</p>
+<div class="highlight"><pre><span></span><span class="o">#</span> <span class="k">set</span> <span class="n">criterion</span> <span class="k">using</span> <span class="nb">binary</span> <span class="n">operators</span>
+
+<span class="n">is_po_count_gt_threshold</span> <span class="o">=</span> <span class="n">po_count_df</span><span class="p">.</span><span class="n">ge</span><span class="p">(</span><span class="mi">30</span><span class="p">)</span>
+
+<span class="n">is_pv_po_ratio_lt_threshold1</span> <span class="o">=</span> <span class="n">pv_po_ratio_df</span><span class="p">.</span><span class="n">lt</span><span class="p">(</span><span class="mi">2000</span><span class="p">)</span>
+
+<span class="n">is_pv_po_ratio_gt_threshold2</span> <span class="o">=</span> <span class="n">pv_po_ratio_df</span><span class="p">.</span><span class="n">gt</span><span class="p">(</span><span class="mi">5000</span><span class="p">)</span>
+</pre></div>
+
+
+<h3>Step 4: Transform Pandas MultiIndex DataFrame into Plotly-compatible format</h3>
+<p>Since we would like to color the Count and Total Amount cells for each Buyer-Vendor combination based on the conditions, we use the Index.repeat() function in pandas to repeat each Index associated with the Vendor for the boolean DataFrames and reindex the DataFrames with the repeated Indexes.</p>
+<p>:::python</p>
+<div class="highlight"><pre><span></span><span class="o">#</span> <span class="n">Repeat</span> <span class="k">rows</span>
+<span class="n">is_po_count_gt_threshold_repeat</span> <span class="o">=</span> <span class="err">\</span>
+    <span class="n">is_po_count_gt_threshold</span><span class="p">.</span><span class="k">reindex</span><span class="p">(</span>
+        <span class="n">is_po_count_gt_threshold</span><span class="p">.</span><span class="k">index</span><span class="p">.</span><span class="n">repeat</span><span class="p">(</span><span class="mi">2</span><span class="p">))</span>
+
+<span class="n">is_pv_po_ratio_lt_threshold1_repeat</span> <span class="o">=</span> <span class="err">\</span>
+    <span class="n">is_pv_po_ratio_lt_threshold1</span><span class="p">.</span><span class="k">reindex</span><span class="p">(</span>
+        <span class="n">is_pv_po_ratio_lt_threshold1</span><span class="p">.</span><span class="k">index</span><span class="p">.</span><span class="n">repeat</span><span class="p">(</span><span class="mi">2</span><span class="p">))</span>
+
+<span class="n">is_pv_po_ratio_gt_threshold2_repeat</span> <span class="o">=</span> <span class="err">\</span>
+    <span class="n">is_pv_po_ratio_gt_threshold2</span><span class="p">.</span><span class="k">reindex</span><span class="p">(</span>
+        <span class="n">is_pv_po_ratio_gt_threshold2</span><span class="p">.</span><span class="k">index</span><span class="p">.</span><span class="n">repeat</span><span class="p">(</span><span class="mi">2</span><span class="p">))</span>
+</pre></div>
+
+
+<p>To transform the resulting boolean DataFrames into Plotly-compatible format, we need to understand how Plotly interprets and outputs table values.</p>
+<p>According to the <a href="https://plot.ly/python/table/">documentation for Tables in Python with Plotly</a>, the data are arranged in a grid of rows and columns and the grid is represented as a vector of column vectors (which is known as a column-major order). Due to limitations in displaying MultiIndex DataFrames in Table format with Plotly, the original MultiIndex DataFrame has to be manipulated in a way that allows Plotly to read the header and cell values in the DataFrame.</p>
+<p>When cell values for a Table object is defined in the following manner:</p>
+<p>:::python</p>
+<div class="highlight"><pre><span></span><span class="n">fig</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">go</span><span class="p">.</span><span class="n">Figure</span><span class="p">(</span><span class="k">data</span><span class="o">=[</span><span class="n">go.Table(</span>
+<span class="n">    header=dict(</span>
+<span class="n">        values=[&#39;A Scores&#39;, &#39;B Scores&#39;</span><span class="o">]</span><span class="p">),</span><span class="w"></span>
+<span class="w">    </span><span class="n">cells</span><span class="o">=</span><span class="n">dict</span><span class="p">(</span><span class="w"></span>
+<span class="w">        </span><span class="k">values</span><span class="o">=[</span><span class="n">[100, 90, 80, 90</span><span class="o">]</span><span class="p">,</span><span class="w"> </span><span class="o">[</span><span class="n">95, 85, 75, 95</span><span class="o">]</span><span class="err">]</span><span class="p">))</span><span class="w"></span>
+<span class="w">    </span><span class="err">]</span><span class="p">)</span><span class="w"></span>
+
+<span class="n">fig</span><span class="p">.</span><span class="n">show</span><span class="p">()</span><span class="w"></span>
+</pre></div>
+
+
+<p>the Table object would be displayed column-wise in the following manner:</p>
+<div class="highlight"><pre><span></span><span class="p">|</span>  <span class="nv">A</span> <span class="nv">Scores</span>   <span class="p">|</span>  <span class="nv">B</span> <span class="nv">Scores</span>   <span class="p">|</span>
+<span class="p">|:-</span><span class="s s-Atom">----------:</span><span class="p">|:-</span><span class="s s-Atom">----------:</span><span class="p">|</span>
+<span class="p">|</span>     <span class="mi">100</span>     <span class="p">|</span>     <span class="mi">95</span>      <span class="p">|</span>
+<span class="p">|</span>     <span class="mi">90</span>      <span class="p">|</span>     <span class="mi">85</span>      <span class="p">|</span>
+<span class="p">|</span>     <span class="mi">80</span>      <span class="p">|</span>     <span class="mi">75</span>      <span class="p">|</span>
+<span class="p">|</span>     <span class="mi">90</span>      <span class="p">|</span>     <span class="mi">95</span>      <span class="p">|</span>
+</pre></div>
+
+
+<p>Column-major order also applies for header values, as illustrated by the example below:</p>
+<p>:::python</p>
+<div class="highlight"><pre><span></span><span class="n">fig</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">go</span><span class="p">.</span><span class="n">Figure</span><span class="p">(</span><span class="k">data</span><span class="o">=[</span><span class="n">go.Table(</span>
+<span class="n">    header=dict(</span>
+<span class="n">        values=[[&#39;Scores&#39;, &#39;A&#39;</span><span class="o">]</span><span class="p">,</span><span class="w"> </span><span class="o">[</span><span class="n">&#39;Scores&#39;,&#39;B&#39;</span><span class="o">]</span><span class="err">]</span><span class="p">),</span><span class="w"></span>
+<span class="w">    </span><span class="n">cells</span><span class="o">=</span><span class="n">dict</span><span class="p">(</span><span class="w"></span>
+<span class="w">        </span><span class="k">values</span><span class="o">=[</span><span class="n">[100, 90, 80, 90</span><span class="o">]</span><span class="p">,</span><span class="w"> </span><span class="o">[</span><span class="n">95, 85, 75, 95</span><span class="o">]</span><span class="err">]</span><span class="p">))</span><span class="w"></span>
+<span class="w">    </span><span class="err">]</span><span class="p">)</span><span class="w"></span>
+
+<span class="n">fig</span><span class="p">.</span><span class="n">show</span><span class="p">()</span><span class="w"></span>
+</pre></div>
+
+
+<p>The Table object generated from the code snippet above would be displayed in the following manner:</p>
+<div class="highlight"><pre><span></span><span class="p">|</span>   <span class="nv">Scores</span>    <span class="p">|</span>   <span class="nv">Scores</span>    <span class="p">|</span>
+<span class="p">|:-</span><span class="s s-Atom">----------:</span><span class="p">|:-</span><span class="s s-Atom">----------:</span><span class="p">|</span>
+<span class="p">|</span>      <span class="nv">A</span>      <span class="p">|</span>      <span class="nv">B</span>      <span class="p">|</span>
+<span class="p">|:-</span><span class="s s-Atom">----------:</span><span class="p">|:-</span><span class="s s-Atom">----------:</span><span class="p">|</span>
+<span class="p">|</span>     <span class="mi">100</span>     <span class="p">|</span>     <span class="mi">95</span>      <span class="p">|</span>
+<span class="p">|</span>     <span class="mi">90</span>      <span class="p">|</span>     <span class="mi">85</span>      <span class="p">|</span>
+<span class="p">|</span>     <span class="mi">80</span>      <span class="p">|</span>     <span class="mi">75</span>      <span class="p">|</span>
+<span class="p">|</span>     <span class="mi">90</span>      <span class="p">|</span>     <span class="mi">95</span>      <span class="p">|</span>
+</pre></div>
+
+
+<p>To represent the row levels in the MultiIndex, the row levels in the DataFrame are defined as a list of lists having the same length as the number of row levels in the DataFrame.</p>
+<p>Understanding how the header and cell values are defined in column-major order in Tables with Plotly is important, as the same column-major order is also used in specifying the styling for header and individual cells.</p>
+<p>In the case of the boolean DataFrames generated from the earlier steps, list of values in DataFrames are typically read in row-major order i.e. <strong>df.loc[row_idx,column_idx] or df.iloc[row_num,column_num]</strong>. Hence, we would have to transform the DataFrames so that the list of values from the DataFrames follow the column-major order that Plotly uses to read table values i.e. <strong>values=[df.column1, df.column2]</strong>. Since column names for Buyer may vary, we transpose the DataFrames from row-major order to column-major order such that Plotly reads the values in column-major order.</p>
+<p>:::python</p>
+<div class="highlight"><pre><span></span><span class="o">#</span> <span class="n">Transpose</span> <span class="n">tables</span> <span class="n">so</span> <span class="n">that</span> <span class="n">list</span> <span class="k">of</span> <span class="k">values</span> <span class="n">follow</span>
+<span class="o">#</span> <span class="n">how</span> <span class="n">Plotly</span> <span class="n">outputs</span> <span class="k">table</span> <span class="k">values</span>
+<span class="n">is_po_count_gt_threshold_repeat_T</span> <span class="o">=</span> <span class="err">\</span>
+    <span class="n">is_po_count_gt_threshold_repeat</span><span class="p">.</span><span class="n">transpose</span><span class="p">().</span><span class="k">values</span><span class="p">.</span><span class="n">tolist</span><span class="p">()</span>
+
+<span class="n">is_pv_po_ratio_lt_threshold1_repeat_T</span> <span class="o">=</span> <span class="err">\</span>
+    <span class="n">is_pv_po_ratio_lt_threshold1_repeat</span><span class="p">.</span><span class="n">transpose</span><span class="p">().</span><span class="k">values</span><span class="p">.</span><span class="n">tolist</span><span class="p">()</span>
+
+<span class="n">is_pv_po_ratio_gt_threshold2_repeat_T</span> <span class="o">=</span> <span class="err">\</span>
+    <span class="n">is_pv_po_ratio_gt_threshold2_repeat</span><span class="p">.</span><span class="n">transpose</span><span class="p">().</span><span class="k">values</span><span class="p">.</span><span class="n">tolist</span><span class="p">()</span>
+</pre></div>
+
+
+<h3>Step 5: Define conditional coloring of table cells</h3>
+<p>Finally, we define the conditional coloring of table cells, with alternating colors for odd and even rows if the table cell does not fulfil the conditional coloring conditions. For readability, the 'Total' column has been excluded from the conditional coloring and is instead colored with alternating colors for odd and even rows.</p>
+<p>:::python</p>
+<div class="highlight"><pre><span></span><span class="n">def</span><span class="w"> </span><span class="n">cond_to_color_cells</span><span class="p">(</span><span class="n">po_count_bool_array</span><span class="p">,</span><span class="w"></span>
+<span class="w">                    </span><span class="n">pv_po_ratio_high_bool_array</span><span class="p">,</span><span class="w"></span>
+<span class="w">                    </span><span class="n">pv_po_ratio_low_bool_array</span><span class="p">,</span><span class="w"></span>
+<span class="w">                    </span><span class="n">i</span><span class="p">,</span><span class="w"> </span><span class="n">j</span><span class="p">)</span><span class="err">:</span><span class="w"></span>
+
+<span class="w">    </span><span class="n">rowEvenColor</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s1">&#39;lavender&#39;</span><span class="w"></span>
+<span class="w">    </span><span class="n">rowOddColor</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s1">&#39;white&#39;</span><span class="w"></span>
+<span class="w">    </span><span class="n">rowPVPOratioUpperBoundColor</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s1">&#39;hotpink&#39;</span><span class="w"></span>
+<span class="w">    </span><span class="n">rowPVPOratioLowerBoundColor</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s1">&#39;yellow&#39;</span><span class="w"></span>
+
+<span class="w">    </span><span class="n">color</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">None</span><span class="w"></span>
+
+<span class="w">    </span><span class="k">if</span><span class="w"> </span><span class="n">i</span><span class="w"> </span><span class="o">%</span><span class="w"> </span><span class="mi">2</span><span class="err">:</span><span class="w"></span>
+<span class="w">        </span><span class="n">color</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">rowOddColor</span><span class="w"></span>
+<span class="w">    </span><span class="k">else</span><span class="err">:</span><span class="w"></span>
+<span class="w">        </span><span class="n">color</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">rowEvenColor</span><span class="w"></span>
+<span class="w">    </span><span class="k">if</span><span class="w"> </span><span class="n">po_count_bool_array</span><span class="o">[</span><span class="n">j</span><span class="o">][</span><span class="n">i</span><span class="o">]</span><span class="w"> </span><span class="o">!=</span><span class="w"> </span><span class="mi">0</span><span class="w">  </span><span class="ow">and</span><span class="w"> </span><span class="n">j</span><span class="w"> </span><span class="o">!=</span><span class="w"> </span><span class="p">(</span><span class="nf">len</span><span class="p">(</span><span class="n">po_count_bool_array</span><span class="p">)</span><span class="o">-</span><span class="mi">1</span><span class="p">)</span><span class="err">:</span><span class="w"></span>
+<span class="w">        </span><span class="k">if</span><span class="w"> </span><span class="n">pv_po_ratio_high_bool_array</span><span class="o">[</span><span class="n">j</span><span class="o">][</span><span class="n">i</span><span class="o">]</span><span class="w"> </span><span class="o">!=</span><span class="w"> </span><span class="mi">0</span><span class="err">:</span><span class="w"></span>
+<span class="w">            </span><span class="n">color</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">rowPVPOratioUpperBoundColor</span><span class="w"></span>
+<span class="w">        </span><span class="n">elif</span><span class="w"> </span><span class="n">pv_po_ratio_low_bool_array</span><span class="o">[</span><span class="n">j</span><span class="o">][</span><span class="n">i</span><span class="o">]</span><span class="w"> </span><span class="o">!=</span><span class="w"> </span><span class="mi">0</span><span class="err">:</span><span class="w"></span>
+<span class="w">            </span><span class="n">color</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">rowPVPOratioLowerBoundColor</span><span class="w"></span>
+
+<span class="w">    </span><span class="k">return</span><span class="w"> </span><span class="n">color</span><span class="w"></span>
+</pre></div>                </article>
             </aside><!-- /#featured -->
                 <section id="content" class="body">
                     <h1>Other articles</h1>
@@ -259,7 +270,35 @@
 
             <li><article class="hentry">
                 <header>
-                    <h1><a href="https://datadiaries.commons.host/multiindexto_frame.html" rel="bookmark"
+                    <h1><a href="https://datadiaries.dev/dataframe-manipulation-sequence-groupby-agg-melt-unstack.html" rel="bookmark"
+                           title="Permalink to Dataframe manipulation sequence - GroupBy Agg, Melt, Unstack">Dataframe manipulation sequence - GroupBy Agg, Melt, Unstack</a></h1>
+                </header>
+
+                <div class="entry-content">
+<footer class="post-info">
+        <abbr class="published" title="2020-01-20T18:06:00+08:00">
+                Published: Mon 20 January 2020
+        </abbr>
+
+        <address class="vcard author">
+                By                         <a class="url fn" href="https://datadiaries.dev/author/ong-chin-hwee.html">Ong Chin Hwee</a>
+        </address>
+<p>In <a href="https://datadiaries.dev/category/pandas.html">Pandas</a>.</p>
+
+</footer><!-- /.post-info -->                <h2>Problem</h2>
+<p>From a Pandas DataFrame, massage the DataFrame into a format where order Count and Total Amount could be determined for each Vendor and each Vendor-Buyer combination.</p>
+<p>:::python</p>
+<div class="highlight"><pre><span></span><span class="o">&gt;&gt;</span> <span class="n">df</span> <span class="o">=</span> <span class="n">pd</span><span class="p">.</span><span class="n">DataFrame</span><span class="p">(</span><span class="k">data</span><span class="o">=</span>
+    <span class="err">{</span><span class="s1">&#39;Vendor&#39;</span><span class="p">:</span> <span class="p">[</span><span class="s1">&#39;A&#39;</span><span class="p">,</span> <span class="s1">&#39;A&#39;</span><span class="p">,</span> <span class="s1">&#39;A&#39;</span><span class="p">,</span> <span class="s1">&#39;B&#39;</span><span class="p">,</span> <span class="s1">&#39;B&#39;</span><span class="p">,</span> <span class="s1">&#39;C&#39;</span><span class="p">,</span> <span class="s1">&#39;C&#39;</span><span class="p">,</span> <span class="s1">&#39;C&#39;</span><span class="p">,</span> <span class="s1">&#39;C&#39;</span><span class="p">,</span>
+            <span class="s1">&#39;D&#39;</span><span class="p">,</span> <span class="s1">&#39;D&#39;</span><span class="p">,</span> <span class="s1">&#39;E&#39;</span><span class="p">,</span> <span class="s1">&#39;E&#39;</span><span class="p">,</span> <span class="s1">&#39;E&#39;</span><span class="p">,</span> <span class="s1">&#39;E&#39;</span><span class="p">,</span> <span class="s1">&#39;E&#39;</span><span class="p">],</span>      
+    <span class="s1">&#39;Buyer …</span></pre></div>
+                <a class="readmore" href="https://datadiaries.dev/dataframe-manipulation-sequence-groupby-agg-melt-unstack.html">read more</a>
+                </div><!-- /.entry-content -->
+            </article></li>
+
+            <li><article class="hentry">
+                <header>
+                    <h1><a href="https://datadiaries.dev/multiindexto_frame.html" rel="bookmark"
                            title="Permalink to MultiIndex.to_frame()">MultiIndex.to_frame()</a></h1>
                 </header>
 
@@ -270,9 +309,9 @@
         </abbr>
 
         <address class="vcard author">
-                By                         <a class="url fn" href="https://datadiaries.commons.host/author/ong-chin-hwee.html">Ong Chin Hwee</a>
+                By                         <a class="url fn" href="https://datadiaries.dev/author/ong-chin-hwee.html">Ong Chin Hwee</a>
         </address>
-<p>In <a href="https://datadiaries.commons.host/category/pandas.html">Pandas</a>.</p>
+<p>In <a href="https://datadiaries.dev/category/pandas.html">Pandas</a>.</p>
 
 </footer><!-- /.post-info -->                <h2>Problem</h2>
 <p>From a MultiIndex dataframe, determine the total number of elements in the Buyer column for each Vendor.</p>
@@ -283,13 +322,13 @@
     <span class="p">{</span><span class="s s-Atom">&#39;Vendor&#39;:</span> <span class="p">[</span><span class="s s-Atom">&#39;A&#39;</span><span class="p">,</span> <span class="s s-Atom">&#39;A&#39;</span><span class="p">,</span> <span class="s s-Atom">&#39;B&#39;</span><span class="p">,</span> <span class="s s-Atom">&#39;C&#39;</span><span class="p">,</span> <span class="s s-Atom">&#39;C&#39;</span><span class="p">,</span> <span class="s s-Atom">&#39;C&#39;</span><span class="p">,</span>
             <span class="s s-Atom">&#39;D&#39;</span><span class="p">,</span> <span class="s s-Atom">&#39;D&#39;</span><span class="p">,</span> <span class="s s-Atom">&#39;E&#39;</span><span class="p">,</span> <span class="s s-Atom">&#39;E&#39;</span><span class="p">,</span> <span class="s s-Atom">&#39;F&#39;</span><span class="p">,</span> <span class="s s-Atom">&#39;G&#39;</span><span class="p">,</span> <span class="s s-Atom">&#39;G&#39;</span><span class="p">],</span>      
     <span class="s s-Atom">&#39;Buyer&#39;:</span><span class="p">[</span><span class="s s-Atom">&#39;BU1&#39;</span><span class="p">,</span> <span class="s s-Atom">&#39;BU3 …</span></pre></div>
-                <a class="readmore" href="https://datadiaries.commons.host/multiindexto_frame.html">read more</a>
+                <a class="readmore" href="https://datadiaries.dev/multiindexto_frame.html">read more</a>
                 </div><!-- /.entry-content -->
             </article></li>
 
             <li><article class="hentry">
                 <header>
-                    <h1><a href="https://datadiaries.commons.host/multiindexset_levels-in-pandas.html" rel="bookmark"
+                    <h1><a href="https://datadiaries.dev/multiindexset_levels-in-pandas.html" rel="bookmark"
                            title="Permalink to MultiIndex.set_levels() in pandas">MultiIndex.set_levels() in pandas</a></h1>
                 </header>
 
@@ -300,13 +339,13 @@
         </abbr>
 
         <address class="vcard author">
-                By                         <a class="url fn" href="https://datadiaries.commons.host/author/ong-chin-hwee.html">Ong Chin Hwee</a>
+                By                         <a class="url fn" href="https://datadiaries.dev/author/ong-chin-hwee.html">Ong Chin Hwee</a>
         </address>
-<p>In <a href="https://datadiaries.commons.host/category/pandas.html">Pandas</a>.</p>
+<p>In <a href="https://datadiaries.dev/category/pandas.html">Pandas</a>.</p>
 
 </footer><!-- /.post-info -->                <p>Problem:
 A user filed an issue on the pandas repo regarding MultiIndex.set_levels - and it turns out the user had some confusion between the set_levels method and the set_names method for MultiIndex due to the documentation. Hence, the MultiIndex.set_levels documentation was marked by the maintainers for improvements to clarify …</p>
-                <a class="readmore" href="https://datadiaries.commons.host/multiindexset_levels-in-pandas.html">read more</a>
+                <a class="readmore" href="https://datadiaries.dev/multiindexset_levels-in-pandas.html">read more</a>
                 </div><!-- /.entry-content -->
             </article></li>
                 </ol><!-- /#posts-list -->

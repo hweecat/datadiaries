@@ -40,6 +40,7 @@ The DataFrame has the following hierarchial indexing properties: 2 levels of col
 For the column indices:
 
 :::python
+
     >> df_unstack.columns
 
     MultiIndex([('value', 'BU1'),
@@ -49,6 +50,7 @@ For the column indices:
 For the row indices:
 
 :::python
+
     >> df_unstack.index
 
     MultiIndex([('A',            'Count'),
@@ -135,6 +137,7 @@ After the metric DataFrames are initialized, we make use of pandas-defined binar
 Since we would like to color the Count and Total Amount cells for each Buyer-Vendor combination based on the conditions, we use the Index.repeat() function in pandas to repeat each Index associated with the Vendor for the boolean DataFrames and reindex the DataFrames with the repeated Indexes.
 
 :::python
+
     # Repeat rows
     is_po_count_gt_threshold_repeat = \
         is_po_count_gt_threshold.reindex(
