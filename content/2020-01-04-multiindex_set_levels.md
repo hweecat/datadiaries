@@ -3,10 +3,12 @@ Date: 2020-01-04 10:20
 Category: Pandas
 Status: published
 
-Problem:
+## Problem
+
 A user filed an issue on the pandas repo regarding MultiIndex.set_levels - and it turns out the user had some confusion between the set_levels method and the set_names method for MultiIndex due to the documentation. Hence, the MultiIndex.set_levels documentation was marked by the maintainers for improvements to clarify that MultiIndex.set_levels() interprets passed values as new components of the .levels attribute.
 
-What I did:
+## What I did
+
 As suggested by @jreback, I updated the docstring of MultiIndex.set_levels directly so that it would be reflected in the API reference. I made the following changes to the docstring:
 
 1. Added an extra value to make the example clearer.
