@@ -11,6 +11,7 @@
                 <h1><a href="https://datadiaries.dev/">Today I Learnt - Data Engineering Diaries </a></h1>
                 <nav><ul>
                     <li class="active"><a href="https://datadiaries.dev/category/pandas.html">Pandas</a></li>
+                    <li><a href="https://datadiaries.dev/category/scikit-learn.html">Scikit-learn</a></li>
                 </ul></nav>
         </header><!-- /#banner -->
 <section id="content" class="body">
@@ -32,10 +33,10 @@
         </address>
 <p>In <a href="https://datadiaries.dev/category/pandas.html">Pandas</a>.</p>
 
-</footer><!-- /.post-info -->      <p>Problem:
-A user filed an issue on the pandas repo regarding MultiIndex.set_levels - and it turns out the user had some confusion between the set_levels method and the set_names method for MultiIndex due to the documentation. Hence, the MultiIndex.set_levels documentation was marked by the maintainers for improvements to clarify that MultiIndex.set_levels() interprets passed values as new components of the .levels attribute.</p>
-<p>What I did:
-As suggested by @jreback, I updated the docstring of MultiIndex.set_levels directly so that it would be reflected in the API reference. I made the following changes to the docstring:</p>
+</footer><!-- /.post-info -->      <h2>Problem</h2>
+<p>A user filed an issue on the pandas repo regarding MultiIndex.set_levels - and it turns out the user had some confusion between the set_levels method and the set_names method for MultiIndex due to the documentation. Hence, the MultiIndex.set_levels documentation was marked by the maintainers for improvements to clarify that MultiIndex.set_levels() interprets passed values as new components of the .levels attribute.</p>
+<h2>What I did</h2>
+<p>As suggested by @jreback, I updated the docstring of MultiIndex.set_levels directly so that it would be reflected in the API reference. I made the following changes to the docstring:</p>
 <ol>
 <li>
 <p>Added an extra value to make the example clearer.</p>

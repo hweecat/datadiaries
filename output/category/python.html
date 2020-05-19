@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
         <meta charset="utf-8" />
-        <title>Today I Learnt - Data Engineering Diaries</title>
+        <title>Today I Learnt - Data Engineering Diaries - Python</title>
         <link rel="stylesheet" href="https://datadiaries.dev/theme/css/main.css" />
 </head>
 
@@ -11,7 +11,7 @@
                 <h1><a href="https://datadiaries.dev/">Today I Learnt - Data Engineering Diaries </a></h1>
                 <nav><ul>
                     <li><a href="https://datadiaries.dev/category/pandas.html">Pandas</a></li>
-                    <li><a href="https://datadiaries.dev/category/scikit-learn.html">Scikit-learn</a></li>
+                    <li class="active"><a href="https://datadiaries.dev/category/python.html">Python</a></li>
                 </ul></nav>
         </header><!-- /#banner -->
 
@@ -26,7 +26,7 @@
         <address class="vcard author">
                 By                         <a class="url fn" href="https://datadiaries.dev/author/ong-chin-hwee.html">Ong Chin Hwee</a>
         </address>
-<p>In <a href="https://datadiaries.dev/category/scikit-learn.html">Scikit-learn</a>.</p>
+<p>In <a href="https://datadiaries.dev/category/python.html">Python</a>.</p>
 
 </footer><!-- /.post-info --><h2>Problem</h2>
 <p>Choose a set of optimal hyperparameters for a machine learning algorithm in scikit-learn by using grid search</p>
@@ -42,10 +42,6 @@
 
 <span class="o">#</span> <span class="k">Set</span> <span class="n">value</span> <span class="k">of</span> <span class="n">k</span> <span class="k">for</span> <span class="k">Cross</span><span class="o">-</span><span class="n">Validation</span>
 <span class="n">k_cv</span> <span class="o">=</span> <span class="mi">5</span>
-
-<span class="o">#</span> <span class="n">Train</span><span class="o">-</span><span class="n">test</span> <span class="n">split</span> <span class="k">of</span> <span class="n">dataset</span> <span class="p">(</span><span class="n">assuming</span> <span class="n">features</span> <span class="k">and</span> <span class="n">labels</span> <span class="n">have</span> <span class="n">been</span> <span class="n">preprocessed</span><span class="p">)</span>
-<span class="n">X_training</span><span class="p">,</span> <span class="n">X_validation</span><span class="p">,</span> <span class="n">y_training</span><span class="p">,</span> <span class="n">y_validation</span> <span class="o">=</span> <span class="err">\</span>
-    <span class="n">train_test_split</span><span class="p">(</span><span class="n">features</span><span class="p">,</span> <span class="n">label</span><span class="p">,</span> <span class="n">test_size</span><span class="o">=</span><span class="n">test_split</span><span class="p">,</span> <span class="n">random_state</span><span class="o">=</span><span class="n">seed_value</span><span class="p">)</span>
 
 <span class="o">#</span> <span class="k">set</span> <span class="n">scoring</span> <span class="n">metric</span>
 <span class="n">model_metric</span> <span class="o">=</span> <span class="s1">&#39;accuracy&#39;</span>
@@ -86,123 +82,6 @@
 <li><a href="https://scikit-learn.org/stable/modules/generated/sklearn.model_selection.GridSearchCV.html">sklearn.model_selection.GridSearchCV -- scikit-learn 0.23.0 documentation</a></li>
 </ul>                </article>
             </aside><!-- /#featured -->
-                <section id="content" class="body">
-                    <h1>Other articles</h1>
-                    <hr />
-                    <ol id="posts-list" class="hfeed">
-
-            <li><article class="hentry">
-                <header>
-                    <h1><a href="https://datadiaries.dev/conditional-colors-in-plotly-tables.html" rel="bookmark"
-                           title="Permalink to Conditional Colors in Plotly Tables">Conditional Colors in Plotly Tables</a></h1>
-                </header>
-
-                <div class="entry-content">
-<footer class="post-info">
-        <abbr class="published" title="2020-02-05T18:06:00+08:00">
-                Published: Wed 05 February 2020
-        </abbr>
-
-        <address class="vcard author">
-                By                         <a class="url fn" href="https://datadiaries.dev/author/ong-chin-hwee.html">Ong Chin Hwee</a>
-        </address>
-<p>In <a href="https://datadiaries.dev/category/pandas.html">Pandas</a>.</p>
-
-</footer><!-- /.post-info -->                <h2>Problem</h2>
-<p>Generate a data table in Plotly that has the following features:</p>
-<ol>
-<li>Alternating cell and line colors for odd/even rows</li>
-<li>Unique cell color on first column</li>
-<li>For third column onwards, color cells using two different colors based on two levels of upper-bound/lower-bound conditions</li>
-</ol>
-<h2>What I did</h2>
-<h3>Step 1 …</h3>
-                <a class="readmore" href="https://datadiaries.dev/conditional-colors-in-plotly-tables.html">read more</a>
-                </div><!-- /.entry-content -->
-            </article></li>
-
-            <li><article class="hentry">
-                <header>
-                    <h1><a href="https://datadiaries.dev/dataframe-manipulation-sequence-groupby-agg-melt-unstack.html" rel="bookmark"
-                           title="Permalink to Dataframe manipulation sequence - GroupBy Agg, Melt, Unstack">Dataframe manipulation sequence - GroupBy Agg, Melt, Unstack</a></h1>
-                </header>
-
-                <div class="entry-content">
-<footer class="post-info">
-        <abbr class="published" title="2020-01-20T18:06:00+08:00">
-                Published: Mon 20 January 2020
-        </abbr>
-
-        <address class="vcard author">
-                By                         <a class="url fn" href="https://datadiaries.dev/author/ong-chin-hwee.html">Ong Chin Hwee</a>
-        </address>
-<p>In <a href="https://datadiaries.dev/category/pandas.html">Pandas</a>.</p>
-
-</footer><!-- /.post-info -->                <h2>Problem</h2>
-<p>From a Pandas DataFrame, massage the DataFrame into a format where order Count and Total Amount could be determined for each Vendor and each Vendor-Buyer combination.</p>
-<p>:::python</p>
-<div class="highlight"><pre><span></span><span class="o">&gt;&gt;</span> <span class="n">df</span> <span class="o">=</span> <span class="n">pd</span><span class="p">.</span><span class="n">DataFrame</span><span class="p">(</span><span class="k">data</span><span class="o">=</span>
-    <span class="err">{</span><span class="s1">&#39;Vendor&#39;</span><span class="p">:</span> <span class="p">[</span><span class="s1">&#39;A&#39;</span><span class="p">,</span> <span class="s1">&#39;A&#39;</span><span class="p">,</span> <span class="s1">&#39;A&#39;</span><span class="p">,</span> <span class="s1">&#39;B&#39;</span><span class="p">,</span> <span class="s1">&#39;B&#39;</span><span class="p">,</span> <span class="s1">&#39;C&#39;</span><span class="p">,</span> <span class="s1">&#39;C&#39;</span><span class="p">,</span> <span class="s1">&#39;C&#39;</span><span class="p">,</span> <span class="s1">&#39;C&#39;</span><span class="p">,</span>
-            <span class="s1">&#39;D&#39;</span><span class="p">,</span> <span class="s1">&#39;D&#39;</span><span class="p">,</span> <span class="s1">&#39;E&#39;</span><span class="p">,</span> <span class="s1">&#39;E&#39;</span><span class="p">,</span> <span class="s1">&#39;E&#39;</span><span class="p">,</span> <span class="s1">&#39;E&#39;</span><span class="p">,</span> <span class="s1">&#39;E&#39;</span><span class="p">],</span>      
-    <span class="s1">&#39;Buyer …</span></pre></div>
-                <a class="readmore" href="https://datadiaries.dev/dataframe-manipulation-sequence-groupby-agg-melt-unstack.html">read more</a>
-                </div><!-- /.entry-content -->
-            </article></li>
-
-            <li><article class="hentry">
-                <header>
-                    <h1><a href="https://datadiaries.dev/multiindexto_frame.html" rel="bookmark"
-                           title="Permalink to MultiIndex.to_frame()">MultiIndex.to_frame()</a></h1>
-                </header>
-
-                <div class="entry-content">
-<footer class="post-info">
-        <abbr class="published" title="2020-01-09T18:06:00+08:00">
-                Published: Thu 09 January 2020
-        </abbr>
-
-        <address class="vcard author">
-                By                         <a class="url fn" href="https://datadiaries.dev/author/ong-chin-hwee.html">Ong Chin Hwee</a>
-        </address>
-<p>In <a href="https://datadiaries.dev/category/pandas.html">Pandas</a>.</p>
-
-</footer><!-- /.post-info -->                <h2>Problem</h2>
-<p>From a MultiIndex dataframe, determine the total number of elements in the Buyer column for each Vendor.</p>
-<h2>What I did</h2>
-<p>Let's say we have the following DataFrame:</p>
-<p>:::python</p>
-<div class="highlight"><pre><span></span><span class="s s-Atom">&gt;&gt;</span> <span class="s s-Atom">df</span> <span class="o">=</span> <span class="s s-Atom">pd</span><span class="p">.</span><span class="nv">DataFrame</span><span class="p">(</span><span class="s s-Atom">data</span><span class="o">=</span>
-    <span class="p">{</span><span class="s s-Atom">&#39;Vendor&#39;:</span> <span class="p">[</span><span class="s s-Atom">&#39;A&#39;</span><span class="p">,</span> <span class="s s-Atom">&#39;A&#39;</span><span class="p">,</span> <span class="s s-Atom">&#39;B&#39;</span><span class="p">,</span> <span class="s s-Atom">&#39;C&#39;</span><span class="p">,</span> <span class="s s-Atom">&#39;C&#39;</span><span class="p">,</span> <span class="s s-Atom">&#39;C&#39;</span><span class="p">,</span>
-            <span class="s s-Atom">&#39;D&#39;</span><span class="p">,</span> <span class="s s-Atom">&#39;D&#39;</span><span class="p">,</span> <span class="s s-Atom">&#39;E&#39;</span><span class="p">,</span> <span class="s s-Atom">&#39;E&#39;</span><span class="p">,</span> <span class="s s-Atom">&#39;F&#39;</span><span class="p">,</span> <span class="s s-Atom">&#39;G&#39;</span><span class="p">,</span> <span class="s s-Atom">&#39;G&#39;</span><span class="p">],</span>      
-    <span class="s s-Atom">&#39;Buyer&#39;:</span><span class="p">[</span><span class="s s-Atom">&#39;BU1&#39;</span><span class="p">,</span> <span class="s s-Atom">&#39;BU3 …</span></pre></div>
-                <a class="readmore" href="https://datadiaries.dev/multiindexto_frame.html">read more</a>
-                </div><!-- /.entry-content -->
-            </article></li>
-
-            <li><article class="hentry">
-                <header>
-                    <h1><a href="https://datadiaries.dev/multiindexset_levels-in-pandas.html" rel="bookmark"
-                           title="Permalink to MultiIndex.set_levels() in pandas">MultiIndex.set_levels() in pandas</a></h1>
-                </header>
-
-                <div class="entry-content">
-<footer class="post-info">
-        <abbr class="published" title="2020-01-04T10:20:00+08:00">
-                Published: Sat 04 January 2020
-        </abbr>
-
-        <address class="vcard author">
-                By                         <a class="url fn" href="https://datadiaries.dev/author/ong-chin-hwee.html">Ong Chin Hwee</a>
-        </address>
-<p>In <a href="https://datadiaries.dev/category/pandas.html">Pandas</a>.</p>
-
-</footer><!-- /.post-info -->                <h2>Problem</h2>
-<p>A user filed an issue on the pandas repo regarding MultiIndex.set_levels - and it turns out the user had some confusion between the set_levels method and the set_names method for MultiIndex due to the documentation. Hence, the MultiIndex.set_levels documentation was marked by the maintainers for improvements to clarify …</p>
-                <a class="readmore" href="https://datadiaries.dev/multiindexset_levels-in-pandas.html">read more</a>
-                </div><!-- /.entry-content -->
-            </article></li>
-                </ol><!-- /#posts-list -->
-                </section><!-- /#content -->
         <section id="extras" class="body">
                 <div class="blogroll">
                         <h2>links</h2>
