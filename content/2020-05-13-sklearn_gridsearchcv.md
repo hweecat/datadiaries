@@ -63,7 +63,7 @@ A code excerpt demonstrating the use of GridSearchCV for k-Nearest Neighbors cla
     print(f'Best score ({model_metric}): {best_model.best_score_:.3f}')
 
 
-## Referencees
+## References
 
 - [Tuning the hyper-parameters of an estimator](https://scikit-learn.org/stable/modules/grid_search.html)
 - [sklearn.model_selection.GridSearchCV -- scikit-learn 0.23.0 documentation](https://scikit-learn.org/stable/modules/generated/sklearn.model_selection.GridSearchCV.html)
