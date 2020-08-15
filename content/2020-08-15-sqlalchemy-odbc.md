@@ -1,6 +1,6 @@
 Title: Connecting to Microsoft SQL Server using SQLAlchemy and PyODBC
 Date: 2020-08-15 19:47
-Category: Databases Python
+Category: Databases
 Status: published
 
 ## Problem

@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+        <meta charset="utf-8" />
+        <title>Connecting to Microsoft SQL Server using SQLAlchemy and PyODBC</title>
+        <link rel="stylesheet" href="https://datadiaries.dev/theme/css/main.css" />
+</head>
+
+<body id="index" class="home">
+        <header id="banner" class="body">
+                <h1><a href="https://datadiaries.dev/">Today I Learnt - Data Engineering Diaries </a></h1>
+                <nav><ul>
+                    <li><a href="https://datadiaries.dev/category/big-data.html">Big Data</a></li>
+                    <li class="active"><a href="https://datadiaries.dev/category/databases.html">Databases</a></li>
+                    <li><a href="https://datadiaries.dev/category/pandas.html">Pandas</a></li>
+                    <li><a href="https://datadiaries.dev/category/scikit-learn.html">Scikit-learn</a></li>
+                </ul></nav>
+        </header><!-- /#banner -->
+<section id="content" class="body">
+  <article>
+    <header>
+      <h1 class="entry-title">
+        <a href="https://datadiaries.dev/connecting-to-microsoft-sql-server-using-sqlalchemy-and-pyodbc.html" rel="bookmark"
+           title="Permalink to Connecting to Microsoft SQL Server using SQLAlchemy and PyODBC">Connecting to Microsoft SQL Server using SQLAlchemy and PyODBC</a></h1>
+    </header>
+
+    <div class="entry-content">
+<footer class="post-info">
+        <abbr class="published" title="2020-08-15T19:47:00+08:00">
+                Published: Sat 15 August 2020
+        </abbr>
+
+        <address class="vcard author">
+                By                         <a class="url fn" href="https://datadiaries.dev/author/ong-chin-hwee.html">Ong Chin Hwee</a>
+        </address>
+<p>In <a href="https://datadiaries.dev/category/databases.html">Databases</a>.</p>
+
+</footer><!-- /.post-info -->      <h2>Problem</h2>
+<p>Connect to a remotely-hosted Microsoft SQL Server within a Python script, using SQLAlchemy as a database abstraction toolkit and PyODBC as a connection engine to access the database within the remotely-hosted SQL Server.</p>
+<h2>Today I Learnt</h2>
+<p>When writing programs that involve interacting with a database, we need to use connection modules or client drivers to establish a database connection in order to send commands and receive responses in the form of a result set.</p>
+<p>Connecting to Microsoft SQL Server from a Python program requires the use of ODBC driver as a native data access API. Before we can access a database in Microsoft SQL Server, we need to configure a Data Source Name (DSN) for the data source (database/server) with the ODBC driver on the native machine hosting the target SQL Server database.</p>
+<p>In the setup I'm using for the data pipeline simulation, the Microsoft SQL Server is hosted remotely on a Windows Server 2019 Virtual Machine (VM).</p>
+<h3>Step 1: Create a DSN for the target data source</h3>
+<p>On the same machine that is hosting the target SQL Server database (in my case, the Windows Server 2019 VM), I created a DSN for the target data source using ODBC Data Source Administrator applet.</p>
+<h4>What is a Data Source Name (DSN)?</h4>
+<p>A Data Source Name (DSN) is a symbolic name that represents a connection to an ODBC Data Source. It stores the connection details such as the database name, directory, database driver, User ID, password etc. when connecting to the ODBC Data Source.</p>
+<p>There are 3 types of DSN that can be created on the ODBC Data Source applet:</p>
+<ol>
+<li>System DSN</li>
+<li>User DSN</li>
+<li>File DSN</li>
+</ol>
+<p><strong>System DSN</strong> is used throughout the system such that anyone with proper rights may log in to access the DSN, and must be created on the machine where the SQL Server database program is located. System DSN is stored in the Windows Registry under HKEY_LOCAL_MACHINE.</p>
+<p><strong>User DSN</strong> is a user-specific DSN that is visible only to the user who created the DSN. Hence, only the user who created the User DSN is able to use and connect to the target data source using the User DSN. User DSN is stored in the Windows Registry under HKEY_CURRENT_USER.</p>
+<p><strong>File DSN</strong> is stored in a text file with a .DSN extension instead of the Windows Registry. A file DSN contains the information required to connect to the target data source, while the ODBC driver must be installed locally in the same machine that is hosting the target data source. File DSNs are stored by default at C:\Program Files\Common Files\Odbc\Data Sources, though they can be stored in a custom directory.</p>
+<h4>What connection details are included in a DSN?</h4>
+<p>A DSN contains the following connection details:</p>
+<ol>
+<li>Driver</li>
+<li>Server</li>
+<li>Database</li>
+<li>Is it a Trusted Connection (connection within the same machine using Windows login)?</li>
+<li>User ID (UID)</li>
+<li>Password (PWD)</li>
+</ol>
+<h3>Step 2: Test DSN access to target data source on native machine</h3>
+<p>After creating a DSN for the target data source (SQL Server database), I tested whether the DSN is able to access the target data source with the native machine by clicking the 'Test Data Source...' button on the ODBC Data Source administrator applet. </p>
+<p>Note that the DSN needs to be able to access the target data source within the native machine first, before we could configure remote access to the target data source from a Python script via a connection engine such as PyODBC. Once the DSN has been configured correctly and tested successfully, we can proceed to the next step of connecting to the target data source remotely. </p>
+<h3>Step 3: Set up connection string in Python for connecting remotely to SQL Server database</h3>
+<p>To access a SQL Server database from a Python program, PyODBC is required as a connection engine to set up a connection string that contains information about the database connection.</p>
+<p>A connection string for connecting to an SQL Server instance looks something like this:</p>
+<p>:::
+    # For Trusted Connection
+    Driver={ODBC Driver 17 for SQL Server};Server=serverName\instanceName;Database=myDataBase;Trusted_Connection=yes;</p>
+<p>:::
+    # For Server Connection
+    Driver={ODBC Driver 17 for SQL Server};Server=serverName\instanceName;Database=myDataBase;UID=myusername;PWD=mypassword;</p>
+<h3>Step 4: Initialize remote connection to SQL Server database</h3>
+<p>When using PyODBC to create the database connection, the initialization of the connection string looks like this:</p>
+<p>:::
+    import pyodbc 
+    server = 'servereName\instanceName,port' # to specify an alternate port
+    database = 'mydb' 
+    username = 'myusername' 
+    password = 'mypassword' 
+    cnxn = pyodbc.connect('DRIVER={ODBC Driver 17 for SQL Server};SERVER='+server+';DATABASE='+database+';UID='+username+';PWD='+ password)
+    cursor = cnxn.cursor()</p>
+<p>The connection string is passed as input to the <code>pyodbc.connect()</code> function, which initializes a connection defined based on parameters in the connection string.</p>
+    </div><!-- /.entry-content -->
+
+  </article>
+</section>
+        <section id="extras" class="body">
+                <div class="blogroll">
+                        <h2>links</h2>
+                        <ul>
+                            <li><a href="https://ongchinhwee.me/">My Portfolio</a></li>
+                            <li><a href="https://github.com/pandas-dev/pandas/">pandas</a></li>
+                            <li><a href="https://ongchinhwee.me/about#talks">Talks</a></li>
+                        </ul>
+                </div><!-- /.blogroll -->
+                <div class="social">
+                        <h2>social</h2>
+                        <ul>
+
+                            <li><a href="https://github.com/hweecat">GitHub</a></li>
+                            <li><a href="https://linkedin.com/in/ongchinhwee">Linkedin</a></li>
+                            <li><a href="https://twitter.com/ongchinhwee">Twitter</a></li>
+                        </ul>
+                </div><!-- /.social -->
+        </section><!-- /#extras -->
+
+        <footer id="contentinfo" class="body">
+                <address id="about" class="vcard body">
+                Proudly powered by <a href="http://getpelican.com/">Pelican</a>, which takes great advantage of <a href="http://python.org">Python</a>.
+                </address><!-- /#about -->
+
+                <p>The theme is by <a href="http://coding.smashingmagazine.com/2009/08/04/designing-a-html-5-layout-from-scratch/">Smashing Magazine</a>, thanks!</p>
+        </footer><!-- /#contentinfo -->
+
+</body>
+</html>
