@@ -66,6 +66,8 @@ A connection string for connecting to an SQL Server instance looks something lik
     # For Server Connection
     Driver={ODBC Driver 17 for SQL Server};Server=serverName\instanceName;Database=myDataBase;UID=myusername;PWD=mypassword;
 
+### Step 4: Initialize remote connection to SQL Server database
+
 When using PyODBC to create the database connection, the initialization of the connection string looks like this:
 
 :::
@@ -77,3 +79,4 @@ When using PyODBC to create the database connection, the initialization of the c
     cnxn = pyodbc.connect('DRIVER={ODBC Driver 17 for SQL Server};SERVER='+server+';DATABASE='+database+';UID='+username+';PWD='+ password)
     cursor = cnxn.cursor()
 
+The connection string is passed as input to the ``pyodbc.connect()`` function, which initializes a connection defined based on parameters in the connection string.
