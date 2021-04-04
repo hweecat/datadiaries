@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="utf-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom"><title>Today I Learnt - Data Engineering Diaries - Big Data</title><link href="/" rel="alternate"></link><link href="/feeds/big-data.atom.xml" rel="self"></link><id>/</id><updated>2020-05-19T21:30:00+08:00</updated><entry><title>Getting Started with PySpark</title><link href="/getting-started-with-pyspark.html" rel="alternate"></link><published>2020-05-19T21:30:00+08:00</published><updated>2020-05-19T21:30:00+08:00</updated><author><name>Ong Chin Hwee</name></author><id>tag:None,2020-05-19:/getting-started-with-pyspark.html</id><summary type="html">&lt;h2&gt;Some Context&lt;/h2&gt;
+&lt;p&gt;I have been using the pandas library for almost 2 years now, but I have always been interested in getting started with using PySpark in a big data project. Since I intend to build a daily habit of taking notes of what I've learnt (which I haven't really …&lt;/p&gt;</summary><content type="html">&lt;h2&gt;Some Context&lt;/h2&gt;
+&lt;p&gt;I have been using the pandas library for almost 2 years now, but I have always been interested in getting started with using PySpark in a big data project. Since I intend to build a daily habit of taking notes of what I've learnt (which I haven't really been keeping up since I end up feeling pressured to write some perfect long post whenever I start writing), I have decided to start off by writing down some notes on PySpark while I follow through the courses on Datacamp and Dataquest.&lt;/p&gt;
+&lt;h2&gt;Spark DataFrames&lt;/h2&gt;
+&lt;p&gt;Spark's core data structure is the Resilient Distributed Dataset (RDD), a low-level object which enables Spark to scale on big data by splitting data across multiple nodes in the cluster. RDDs support two types of operations: &lt;em&gt;transformations&lt;/em&gt;, which create a new dataset from an existing one, and &lt;em&gt;actions&lt;/em&gt;, which return a value to the driver program after performing a computation on the dataset.&lt;/p&gt;
+&lt;p&gt;However, RDDs are tricky to work with directly; hence, the Spark DataFrame abstraction built on top of RDDs is designed to make processing of large datasets easier (similar to SQL table) and more optimized for complicated operations compared with RDDs.&lt;/p&gt;
+&lt;h2&gt;Creating a SparkSession&lt;/h2&gt;
+&lt;p&gt;To start working with Spark DataFrames, we first have to create a SparkSession object from our SparkContext - SparkContext is the connection to the cluster while the SparkSession acts as our interface with that connection.&lt;/p&gt;
+&lt;p&gt;To create a SparkSession in the cluster environment, it is usually best practice to use the &lt;strong&gt;SparkSession.builder.getOrCreate()&lt;/strong&gt; method which returns an existing SparkSession in the environment or create a new SparkSession if necessary.&lt;/p&gt;
+&lt;p&gt;:::python&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="c1"&gt;# Import SparkSession from pyspark.sql&lt;/span&gt;
+&lt;span class="kn"&gt;from&lt;/span&gt; &lt;span class="nn"&gt;pyspark.sql&lt;/span&gt; &lt;span class="kn"&gt;import&lt;/span&gt; &lt;span class="n"&gt;SparkSession&lt;/span&gt;
+
+&lt;span class="c1"&gt;# Create spark&lt;/span&gt;
+&lt;span class="n"&gt;spark&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;SparkSession&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;builder&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;getOrCreate&lt;/span&gt;&lt;span class="p"&gt;()&lt;/span&gt;
+
+&lt;span class="c1"&gt;# Print spark&lt;/span&gt;
+&lt;span class="k"&gt;print&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;spark&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+
+&lt;span class="o"&gt;&amp;gt;&amp;gt;&lt;/span&gt; &lt;span class="o"&gt;&amp;lt;&lt;/span&gt;&lt;span class="n"&gt;pyspark&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;sql&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;session&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;SparkSession&lt;/span&gt; &lt;span class="nb"&gt;object&lt;/span&gt; &lt;span class="n"&gt;at&lt;/span&gt; &lt;span class="mh"&gt;0x7fa498a13cf8&lt;/span&gt;&lt;span class="o"&gt;&amp;gt;&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;h2&gt;Viewing Tables in a Spark Cluster&lt;/h2&gt;
+&lt;p&gt;A SparkSession object has an attribute called &lt;strong&gt;catalog&lt;/strong&gt; which lists all the data inside the cluster. To list the names of all the tables in the cluster, we use the .listTables() method in the &lt;strong&gt;catalog&lt;/strong&gt; attribute.&lt;/p&gt;
+&lt;p&gt;:::python&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="err"&gt;# Print the list of tables in the catalog&lt;/span&gt;
+&lt;span class="err"&gt;print(spark.catalog.listTables())&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;h2&gt;Querying Spark DataFrame with SQL&lt;/h2&gt;
+&lt;p&gt;One of the advantages of the DataFrame interface is that we can run SQL queries on the tables in our Spark cluster. To run a query on a table in the Spark cluster, we use the .sql() method on our SparkSession. This method takes a string containing the query as input, and returns a DataFrame with the results.&lt;/p&gt;
+&lt;p&gt;For example, if I would like to query the first 10 rows from the 'flights' table in our Spark cluster, I perform the .sql() method on my SparkSession object and use .show() to display the query results.&lt;/p&gt;
+&lt;p&gt;:::python&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="o"&gt;#&lt;/span&gt; &lt;span class="n"&gt;query&lt;/span&gt; &lt;span class="k"&gt;first&lt;/span&gt; &lt;span class="mi"&gt;10&lt;/span&gt; &lt;span class="k"&gt;rows&lt;/span&gt; &lt;span class="k"&gt;from&lt;/span&gt; &lt;span class="n"&gt;flights&lt;/span&gt; &lt;span class="k"&gt;table&lt;/span&gt;
+&lt;span class="n"&gt;query&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="ss"&gt;&amp;quot;FROM flights SELECT * LIMIT 10&amp;quot;&lt;/span&gt;
+
+&lt;span class="o"&gt;#&lt;/span&gt; &lt;span class="k"&gt;Get&lt;/span&gt; &lt;span class="n"&gt;the&lt;/span&gt; &lt;span class="k"&gt;first&lt;/span&gt; &lt;span class="mi"&gt;10&lt;/span&gt; &lt;span class="k"&gt;rows&lt;/span&gt; &lt;span class="k"&gt;of&lt;/span&gt; &lt;span class="n"&gt;flights&lt;/span&gt;
+&lt;span class="n"&gt;flights10&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;spark&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="k"&gt;sql&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;query&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+
+&lt;span class="o"&gt;#&lt;/span&gt; &lt;span class="k"&gt;Show&lt;/span&gt; &lt;span class="n"&gt;the&lt;/span&gt; &lt;span class="n"&gt;results&lt;/span&gt;
+&lt;span class="n"&gt;flights10&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="k"&gt;show&lt;/span&gt;&lt;span class="p"&gt;()&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;h2&gt;References&lt;/h2&gt;
+&lt;p&gt;&lt;a href="https://campus.datacamp.com/courses/introduction-to-pyspark/"&gt;Introduction to PySpark - DataCamp&lt;/a&gt;
+&lt;a href="https://spark.apache.org/docs/latest/rdd-programming-guide.html"&gt;RDD Programming Guide - Spark 2.4.5 Documentation&lt;/a&gt;
+&lt;a href="https://spark.apache.org/docs/latest/sql-programming-guide.html"&gt;Spark SQL and DataFrames - Spark 2.4.5 Documentation&lt;/a&gt;&lt;/p&gt;</content><category term="Big Data"></category></entry></feed>
