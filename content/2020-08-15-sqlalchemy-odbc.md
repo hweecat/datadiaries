@@ -59,10 +59,12 @@ To access a SQL Server database from a Python program, PyODBC is required as a c
 A connection string for connecting to an SQL Server instance looks something like this:
 
 :::
+
     # For Trusted Connection
     Driver={ODBC Driver 17 for SQL Server};Server=serverName\instanceName;Database=myDataBase;Trusted_Connection=yes;
 
 :::
+
     # For Server Connection
     Driver={ODBC Driver 17 for SQL Server};Server=serverName\instanceName;Database=myDataBase;UID=myusername;PWD=mypassword;
 
