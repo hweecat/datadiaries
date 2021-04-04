@@ -73,8 +73,9 @@ A connection string for connecting to an SQL Server instance looks something lik
 When using PyODBC to create the database connection, the initialization of the connection string looks like this:
 
 :::
+
     import pyodbc 
-    server = 'servereName\instanceName,port' # to specify an alternate port
+    server = 'serverName\instanceName,port' # to specify an alternate port
     database = 'mydb' 
     username = 'myusername' 
     password = 'mypassword' 
@@ -82,3 +83,53 @@ When using PyODBC to create the database connection, the initialization of the c
     cursor = cnxn.cursor()
 
 The connection string is passed as input to the ``pyodbc.connect()`` function, which initializes a connection defined based on parameters in the connection string.
+
+### Step 5: Convert connection string to SQLAlchemy format
+
+What if I want to:
+
+1. Change my database connection details
+2. Change database server
+3. Change database type from SQL Server to some other database, such as MySQL or Postgres
+4. Use named parameters in my queries
+5. Avoid the use of raw string queries to protect against SQL injection attacks without having to deal with the complexities of changing hard-coded database connection settings and dialect-specific nuances?
+
+A quick note about using query parameters in PyODBC: - PyODBC supports the use of parameter markers using a question mark as placeholder in the SQL query. However, it does not natively support the use of named parameters in SQL queries.
+
+Using a database abstraction layer such as SQLAlchemy would be useful in handling the nuances associated with different SQL dialects, as well as providing some protection against SQL injection through the use of built queries.
+
+In SQLAlchemy, the connection string format to create a database engine is as follows:
+
+::
+
+    {Database Type}+{Database Connector}://{login}:{password}@{host}:{port}/{Database}?driver={Driver with spaces replaced with +}
+
+What if I want to use Trusted Connection to access my SQL Server instance? Here's the hostname connection string format in SQLAlchemy:
+
+::
+
+    {Database Type}+{Database Connector}://{host}:{port}/{Database}?driver={Driver with spaces replaced with +}?TrustedConnection=yes
+
+Hard-coding parameters within a connection string can be the simplest way to set up a database connection, but what if I want to parse parameters into the connection string without writing the connection string in full?
+
+### PyODBC connections
+
+According to SQLAlchemy's documentation, an exact PyODBC connection string can be sent in pyodbc's format directly using the parameter odbc_connect. As the delimiters need to be URL-encoded (especially the Driver), urllib.parse.quote_plus is used to encode the PyODBC connection string.
+
+:::
+
+    import urllib
+    from sqlalchemy import create_engine
+
+    server = 'serverName\instanceName,port' # to specify an alternate port
+    database = 'mydb' 
+    username = 'myusername' 
+    password = 'mypassword'
+
+    params = urllib.parse.quote_plus("'DRIVER={ODBC Driver 17 for SQL Server};SERVER='+server+';DATABASE='+database+';UID='+username+';PWD='+ password")
+
+    engine = create_engine("mssql+pyodbc:///?odbc_connect=%s" % params)
+
+### What about hostname connections
+
+If we intend to move across databases (from MySQL to PostgreSQL for example), it might be preferred to pass hostname connections to SQLAlchemy engine instead by using the hostname connection string format.
